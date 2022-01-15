@@ -4,6 +4,12 @@
 
 计算方法仅适用于西南石油大学的平均学分绩点
 
+或满足以下计算公式的学校
+$$
+\overline x = \frac{\sum(单科学分 * 单科成绩)}{\sum单科学分}
+$$
+即加权平均分(国内大部分学校应该都是加权平均分)
+
 ### 更新
 
 - [2022.1.15 更新 V0.3.1](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V0.3.1)
