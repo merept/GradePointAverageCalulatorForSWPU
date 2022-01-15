@@ -4,6 +4,12 @@
 
 计算方法仅适用于西南石油大学的平均学分绩点
 
+### 更新
+
+- [2022.1.15 更新 V0.3.1](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V0.3.1)
+
+> 优化了电源的使用情况，减少耗电以及CPU占用
+
 ### 使用说明
 
 请在输入框输入您每科的学分及期末成绩，并点击输入框下方 ”开始计算“ 按钮进行计算
