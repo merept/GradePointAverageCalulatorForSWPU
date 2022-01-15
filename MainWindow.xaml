@@ -1,0 +1,17 @@
+﻿<Window x:Class="GradePointAverageCalulatorForSWPU.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GradePointAverageCalulatorForSWPU"
+        mc:Ignorable="d"
+        Title="SWPU学分绩点计算器" Height="500" Width="800" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
+    <Grid>
+        <TextBox x:Name="GradesAndPoints" HorizontalAlignment="Center" TextWrapping="Wrap" Text="" Width="750" FontSize="18" AcceptsReturn="True" VerticalAlignment="Top" Height="380"/>
+
+        <Grid Margin="0,390,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" Width="500" Height="60">
+            <Button x:Name="BeginCalculate" Content="开始计算" HorizontalAlignment="Center" Height="40" Width="150" FontSize="15" Click="BeginCalculate_Click" VerticalAlignment="Center"/>
+        </Grid>
+
+    </Grid>
+</Window>
