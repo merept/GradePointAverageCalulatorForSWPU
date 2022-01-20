@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows;
 
@@ -7,11 +8,13 @@ namespace GradePointAverageCalulatorForSWPU {
     /// MainWindow.xaml 的交互逻辑
     /// </summary>
     public partial class MainWindow : Window {
+        public static string HistoryFilePath { get; } = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + 
+            @"\GradePointAverageCalulatorForSWPU\history";
+        public string HistoryReaded { get; set; }
         public readonly string helpText = "欢迎来到SWPU平均学分绩点计算器!\n" +
             "\n" +
-            "2022.1.15更新 version 0.3\n" +
-            "1.增加结果详情页, 详情页内可直接更改数据\n" +
-            "2.优化视觉效果\n" +
+            "2022.1.20更新 version 0.3.3\n" +
+            "1.增加历史记录功能，可快捷查看历史记录\n" +
             "\n"+
             "请在输入框输入您每科的学分及期末成绩，并点击输入框下方 ”开始计算“ 按钮进行计算\n" +
             "输入时请严格遵守一下几点:\n" +
@@ -27,6 +30,7 @@ namespace GradePointAverageCalulatorForSWPU {
         public MainWindow() {
             if (MessageBox.Show(helpText, "使用前必读!!!", MessageBoxButton.OKCancel, MessageBoxImage.Asterisk) == MessageBoxResult.Cancel)
                 Environment.Exit(0);
+            HistoryReaded = "";
             InitializeComponent();
         }
 
@@ -58,15 +62,36 @@ namespace GradePointAverageCalulatorForSWPU {
             } else return;
         }
 
+        private void Write() {
+            try {
+                var sw = new StreamWriter($"{HistoryFilePath}\\{DateTime.Now:yyyy-MM-dd HH.mm.ss}.txt");
+                sw.WriteLine(GradesAndPoints.Text);
+                sw.Flush();
+                sw.Close();
+            } catch (IOException) {
+                Directory.CreateDirectory(HistoryFilePath);
+                Write();
+            }
+        }
+
         private void BeginCalculate_Click(object sender, RoutedEventArgs e) {
-            var dataRegex = new Regex(@"\d+\.*\d*");
-            var nameRegex = new Regex(@"[a-zA-z\u4e00-\u9fa5]+");
-            var dataMatches = dataRegex.Matches(GradesAndPoints.Text);
-            var nameMatches = nameRegex.Matches(GradesAndPoints.Text);
-            
+            if (string.IsNullOrEmpty(GradesAndPoints.Text)) {
+                MessageBox.Show("请输入内容!", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            var dataMatches = Regex.Matches(GradesAndPoints.Text, @"\d+\.*\d*");
+            var nameMatches = Regex.Matches(GradesAndPoints.Text, @"[a-zA-z\u4e00-\u9fa5]+");
             if (nameMatches.Count == 0 || nameMatches.Count != dataMatches.Count / 2) {
                 ShowResult(dataMatches);
             } else ShowResult(dataMatches, nameMatches);
+            if (HistoryReaded != GradesAndPoints.Text || string.IsNullOrEmpty(HistoryReaded)) {
+                Write();
+                HistoryReaded = GradesAndPoints.Text;
+            }
+        }
+
+        private void History_Click(object sender, RoutedEventArgs e) {
+            new History(this).ShowDialog();
         }
     }
 }

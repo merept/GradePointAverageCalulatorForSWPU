@@ -89,6 +89,9 @@
     <Compile Include="ChangeData.xaml.cs">
       <DependentUpon>ChangeData.xaml</DependentUpon>
     </Compile>
+    <Compile Include="History.xaml.cs">
+      <DependentUpon>History.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ResultWindows.xaml.cs">
       <DependentUpon>ResultWindows.xaml</DependentUpon>
     </Compile>
@@ -96,6 +99,10 @@
       <DependentUpon>ResultWindowWithNames.xaml</DependentUpon>
     </Compile>
     <Page Include="ChangeData.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="History.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

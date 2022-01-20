@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "SWPU平均学分绩点计算器"
-#define MyAppVersion "0.3.2"
+#define MyAppVersion "0.3.3"
 #define MyAppPublisher "MerePT"
 #define MyAppExeName "GradePointAverageCalulatorForSWPU.exe"
 #define MyAppAssocName MyAppName + " File"

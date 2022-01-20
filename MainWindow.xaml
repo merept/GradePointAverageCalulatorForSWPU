@@ -9,8 +9,9 @@
     <Grid>
         <TextBox x:Name="GradesAndPoints" HorizontalAlignment="Center" TextWrapping="Wrap" Text="" Width="750" FontSize="18" AcceptsReturn="True" VerticalAlignment="Top" Height="380"/>
 
-        <Grid Margin="0,390,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" Width="500" Height="60">
-            <Button x:Name="BeginCalculate" Content="开始计算" HorizontalAlignment="Center" Height="40" Width="150" FontSize="15" Click="BeginCalculate_Click" VerticalAlignment="Center"/>
+        <Grid Margin="0,390,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" Width="350" Height="60">
+            <Button x:Name="BeginCalculate" Content="查看结果" HorizontalAlignment="Left" Height="40" Width="150" FontSize="15" Click="BeginCalculate_Click" VerticalAlignment="Center"/>
+            <Button x:Name="History" Content="历史记录" HorizontalAlignment="Right" VerticalAlignment="Center" Height="40" Width="150" FontSize="15" Click="History_Click"/>
         </Grid>
 
     </Grid>
