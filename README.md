@@ -12,6 +12,10 @@
 
 ### 更新
 
+- [2022.1.15 更新 V0.3.3](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V0.3.3)
+
+> 增加历史记录功能，可快捷查看历史记录
+
 - [2022.1.15 更新 V0.3.1](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V0.3.1)
 
 > 优化了电源的使用情况，减少耗电以及CPU占用
