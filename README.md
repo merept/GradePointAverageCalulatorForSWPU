@@ -12,6 +12,10 @@
 
 ### 更新
 
+- [2022.1.27 更新 V0.3.5](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V0.3.5)
+
+> 优化了一些操作逻辑
+
 - [2022.1.27 更新 V0.3.4](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V0.3.4)
 
 > 修复了历史记录窗口双击空白处会闪退的bug

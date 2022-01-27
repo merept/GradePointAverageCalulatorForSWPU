@@ -19,6 +19,6 @@
             <Label Content="成绩" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="12" Margin="0,4,0,0"/>
             <TextBox x:Name="Grade" HorizontalAlignment="Center" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="50" FontSize="12" Margin="0,27,0,0"/>
         </Grid>
-        <Button x:Name="Change" Content="修改" Height="20" HorizontalAlignment="Center"  VerticalAlignment="Top" Width="70" FontSize="12" Click="Change_Click" Margin="0,70,0,0"/>
+        <Button x:Name="Change" Content="修改" Height="20" HorizontalAlignment="Center"  VerticalAlignment="Top" Width="70" FontSize="12" Click="Change_Click" Margin="0,70,0,0" IsDefault="True"/>
     </Grid>
 </Window>

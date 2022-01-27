@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Input;
 
 namespace GradePointAverageCalulatorForSWPU {
     /// <summary>
@@ -13,9 +14,15 @@ namespace GradePointAverageCalulatorForSWPU {
 
         public ChangeData(int index, BindingList<GradeAndPoint> gradesAndPoints, GradePointAverage gradePointAverage) {
             InitializeComponent();
+            KeyDown += Esc_Key_Down;
             Index = index;
             GradesAndPoints = gradesAndPoints;
             GradePointAverage = gradePointAverage;
+        }
+
+        private void Esc_Key_Down(object sender, KeyEventArgs e) {
+            if (e.Key == Key.Escape)
+                Close();
         }
 
         private void Change_Click(object sender, RoutedEventArgs e) {

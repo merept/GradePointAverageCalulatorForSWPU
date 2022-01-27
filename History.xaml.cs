@@ -15,15 +15,23 @@ namespace GradePointAverageCalulatorForSWPU {
 
         public History(MainWindow main) {
             InitializeComponent();
+            KeyDown += Esc_Key_Down;
             Main = main;
             NoHistory.Add("暂无历史记录");
             if (!Directory.Exists(MainWindow.HistoryFilePath)) {
                 Directory.CreateDirectory(MainWindow.HistoryFilePath);
             } else {
                 var fileNames = new DirectoryInfo(MainWindow.HistoryFilePath).GetFiles();
-                if (fileNames.Length == 0) Historys.ItemsSource = NoHistory;
-                else Historys.ItemsSource = fileNames;
+                if (fileNames.Length == 0) {
+                    Historys.ItemsSource = NoHistory;
+                    Clear.IsEnabled = false;
+                } else Historys.ItemsSource = fileNames;
             }
+        }
+
+        private void Esc_Key_Down(object sender, KeyEventArgs e) {
+            if (e.Key == Key.Escape)
+                Close();
         }
 
         private void ListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e) {

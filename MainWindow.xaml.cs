@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows;
+using System.Windows.Input;
 
 namespace GradePointAverageCalulatorForSWPU {
     /// <summary>
@@ -12,6 +13,9 @@ namespace GradePointAverageCalulatorForSWPU {
             @"\GradePointAverageCalulatorForSWPU\history";
         public string HistoryReaded { get; set; }
         public readonly string helpText = "欢迎来到SWPU平均学分绩点计算器!\n" +
+            "\n" +
+            "2022.1.27更新 version 0.3.5\n" +
+            "1.优化了一些操作逻辑\n" +
             "\n" +
             "2022.1.27更新 version 0.3.4\n" +
             "1.修复了历史记录窗口双击空白处会闪退的bug\n" +
@@ -33,6 +37,12 @@ namespace GradePointAverageCalulatorForSWPU {
                 Environment.Exit(0);
             HistoryReaded = "";
             InitializeComponent();
+            KeyDown += Esc_Key_Down;
+        }
+
+        private void Esc_Key_Down(object sender, KeyEventArgs e) {
+            if (e.Key == Key.Escape)
+                Close();
         }
 
         private bool MessageBoxShow(GradePointAverage gpa) {
