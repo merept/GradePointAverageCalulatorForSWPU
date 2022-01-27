@@ -13,8 +13,8 @@ namespace GradePointAverageCalulatorForSWPU {
         public string HistoryReaded { get; set; }
         public readonly string helpText = "欢迎来到SWPU平均学分绩点计算器!\n" +
             "\n" +
-            "2022.1.20更新 version 0.3.3\n" +
-            "1.增加历史记录功能，可快捷查看历史记录\n" +
+            "2022.1.27更新 version 0.3.4\n" +
+            "1.修复了历史记录窗口双击空白处会闪退的bug\n" +
             "\n"+
             "请在输入框输入您每科的学分及期末成绩，并点击输入框下方 ”开始计算“ 按钮进行计算\n" +
             "输入时请严格遵守一下几点:\n" +

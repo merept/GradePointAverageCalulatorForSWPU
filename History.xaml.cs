@@ -11,7 +11,7 @@ namespace GradePointAverageCalulatorForSWPU {
     /// </summary>
     public partial class History : Window {
         private MainWindow Main { get; }
-        private List<string> NoHistory = new List<string>();
+        private List<string> NoHistory { get; } = new List<string>();
 
         public History(MainWindow main) {
             InitializeComponent();
@@ -27,7 +27,7 @@ namespace GradePointAverageCalulatorForSWPU {
         }
 
         private void ListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e) {
-            if (Historys.SelectedItem.ToString() == "暂无历史记录")
+            if (Historys.SelectedItem == null || Historys.SelectedItem.ToString() == "暂无历史记录")
                 return;
             try {
                 var sr = new StreamReader($"{MainWindow.HistoryFilePath}\\{Historys.SelectedItem}");
