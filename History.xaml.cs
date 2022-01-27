@@ -36,8 +36,9 @@ namespace GradePointAverageCalulatorForSWPU {
                 while ((line = sr.ReadLine()) != null)
                     sb.AppendLine(line);
                 Main.GradesAndPoints.Text = sb.ToString();
-                Main.HistoryReaded = sb.ToString();
                 Close();
+                Main.HistoryReaded = sb.ToString();
+                Main.BeginCalculate.RaiseEvent(new RoutedEventArgs(System.Windows.Controls.Primitives.ButtonBase.ClickEvent));
             } catch (Exception ex) {
                 MessageBox.Show(ex.Message, ex.GetType().Name, MessageBoxButton.OK, MessageBoxImage.Error);
             }
