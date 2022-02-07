@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MessageUtil</name>
+    </assembly>
+    <members>
+        <member name="T:MessageUtil.Message">
+            <summary>
+            简化了 <see cref="T:System.Windows.MessageBox"/> 的使用
+            </summary>
+        </member>
+        <member name="M:MessageUtil.Message.ShowInformation(System.String,System.String)">
+            <summary>
+            显示具有消息，标题，一个确定按钮以及一个圆圈中包含一个 i 的图标的消息框
+            </summary>
+            <param name="message">显示的消息</param>
+            <param name="caption">显示的标题</param>
+            <returns>一个 <see cref="T:System.Windows.MessageBoxResult"/> 值，该方法仅返回 <see cref="F:System.Windows.MessageBoxResult.OK"/> 值</returns>
+        </member>
+        <member name="M:MessageUtil.Message.ShowError(System.String)">
+            <summary>
+            显示具有消息，标题为 错误 ，一个确定按钮以及一个红色背景圆圈中包含一个 X 的图标的消息框
+            </summary>
+            <param name="message">显示的消息</param>
+            <returns>一个 <see cref="T:System.Windows.MessageBoxResult"/> 值，该方法仅返回 <see cref="F:System.Windows.MessageBoxResult.OK"/> 值</returns>
+        </member>
+        <member name="M:MessageUtil.Message.ShowError(System.String,System.String)">
+            <summary>
+            显示具有消息，标题，一个确定按钮以及一个红色背景圆圈中包含一个 X 的图标的消息框
+            </summary>
+            <param name="message">显示的消息</param>
+            <param name="caption">显示的标题</param>
+            <returns>一个 <see cref="T:System.Windows.MessageBoxResult"/> 值，该方法仅返回 <see cref="F:System.Windows.MessageBoxResult.OK"/> 值</returns>
+        </member>
+        <member name="M:MessageUtil.Message.ShowWarning(System.String)">
+            <summary>
+            显示具有消息，标题为 警告 ，一个确定按钮以及一个黄色背景三角形中包含一个 ! 的图标的消息框
+            </summary>
+            <param name="message">显示的消息</param>
+            <returns>一个 <see cref="T:System.Windows.MessageBoxResult"/> 值，该方法仅返回 <see cref="F:System.Windows.MessageBoxResult.OK"/> 值</returns>
+        </member>
+        <member name="M:MessageUtil.Message.ShowWarning(System.String,System.String)">
+            <summary>
+            显示具有消息，标题，一个确定按钮以及一个黄色背景三角形中包含一个 ! 的图标的消息框
+            </summary>
+            <param name="message">显示的消息</param>
+            <param name="caption">显示的标题</param>
+            <returns>一个 <see cref="T:System.Windows.MessageBoxResult"/> 值，该方法仅返回 <see cref="F:System.Windows.MessageBoxResult.OK"/> 值</returns>
+        </member>
+        <member name="M:MessageUtil.Message.ShowYesNoDialog(System.String,System.String)">
+            <summary>
+            显示具有消息，标题，是 和 否 按钮以及一个圆圈中包含一个 i 的图标的消息框
+            </summary>
+            <param name="message">显示的消息</param>
+            <param name="caption">显示的标题</param>
+            <returns>一个 <see cref="T:System.Windows.MessageBoxResult"/> 值，该值指定用户单击的 是 或 否 按钮</returns>
+        </member>
+        <member name="M:MessageUtil.Message.ShowYesNoDialog(System.String,System.String,System.Windows.MessageBoxImage)">
+            <summary>
+            显示具有消息，标题，是 和 否 按钮以及一个可选的 <see cref="T:System.Windows.MessageBoxImage"/> 图标的消息框
+            </summary>
+            <param name="message">显示的消息</param>
+            <param name="caption">显示的标题</param>
+            <param name="icon">显示的 <see cref="T:System.Windows.MessageBoxImage"/> 图标</param>
+            <returns>一个 <see cref="T:System.Windows.MessageBoxResult"/> 值，该值指定用户单击的 是 或 否 按钮</returns>
+        </member>
+        <member name="M:MessageUtil.Message.ShowYesNoCancelDialog(System.String,System.String)">
+            <summary>
+            显示具有消息，标题，是 、否 和 取消 按钮以及一个圆圈中包含一个 i 的图标的消息框
+            </summary>
+            <param name="message">显示的消息</param>
+            <param name="caption">显示的标题</param>
+            <returns>一个 <see cref="T:System.Windows.MessageBoxResult"/> 值，该值指定用户单击的 是 、否 或 取消 按钮</returns>
+        </member>
+        <member name="M:MessageUtil.Message.ShowYesNoCancelDialog(System.String,System.String,System.Windows.MessageBoxImage)">
+            <summary>
+            显示具有消息，标题，是 、否 和 取消 按钮以及一个可选的 <see cref="T:System.Windows.MessageBoxImage"/> 图标的消息框
+            </summary>
+            <param name="message">显示的消息</param>
+            <param name="caption">显示的标题</param>
+            <param name="icon">显示的 <see cref="T:System.Windows.MessageBoxImage"/> 图标</param>
+            <returns>一个 <see cref="T:System.Windows.MessageBoxResult"/> 值，该值指定用户单击的 是 、否 或 取消 按钮</returns>
+        </member>
+        <member name="M:MessageUtil.Message.ShowOKCancelDialog(System.String,System.String)">
+            <summary>
+            显示具有消息，标题，确定 和 取消 按钮以及一个圆圈中包含一个 i 的图标的消息框
+            </summary>
+            <param name="message">显示的消息</param>
+            <param name="caption">显示的标题</param>
+            <returns>一个 <see cref="T:System.Windows.MessageBoxResult"/> 值，该值指定用户单击的 确定 或 取消 按钮</returns>
+        </member>
+        <member name="M:MessageUtil.Message.ShowOKCancelDialog(System.String,System.String,System.Windows.MessageBoxImage)">
+            <summary>
+            显示具有消息，标题，确定 和 取消 按钮以及一个可选的 <see cref="T:System.Windows.MessageBoxImage"/> 图标的消息框
+            </summary>
+            <param name="message">显示的消息</param>
+            <param name="caption">显示的标题</param>
+            <param name="icon">显示的 <see cref="T:System.Windows.MessageBoxImage"/> 图标</param>
+            <returns>一个 <see cref="T:System.Windows.MessageBoxResult"/> 值，该值指定用户单击的 确定 或 取消 按钮</returns>
+        </member>
+    </members>
+</doc>

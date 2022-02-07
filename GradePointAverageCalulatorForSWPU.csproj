@@ -69,6 +69,10 @@
     <StartupObject>GradePointAverageCalulatorForSWPU.App</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MessageUtil, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>MessageUtil\MessageUtil.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />

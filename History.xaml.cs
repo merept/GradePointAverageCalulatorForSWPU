@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MessageUtil;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -48,14 +49,14 @@ namespace GradePointAverageCalulatorForSWPU {
                 Main.HistoryReaded = sb.ToString();
                 Main.BeginCalculate.RaiseEvent(new RoutedEventArgs(System.Windows.Controls.Primitives.ButtonBase.ClickEvent));
             } catch (Exception ex) {
-                MessageBox.Show(ex.Message, ex.GetType().Name, MessageBoxButton.OK, MessageBoxImage.Error);
+                Message.ShowError(ex.Message, ex.GetType().Name);
             }
         }
 
         private void Clear_Click(object sender, RoutedEventArgs e) {
             if (Historys.Items[0].ToString() == "暂无历史记录")
                 return;
-            if (MessageBox.Show("是否清空历史记录?", "警告", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning) != MessageBoxResult.Yes)
+            if (Message.ShowYesNoCancelDialog("是否清空历史记录?", "警告", MessageBoxImage.Warning) != MessageBoxResult.Yes)
                 return;
             try {
                 var fileFullNames = Directory.GetFiles(MainWindow.HistoryFilePath);
@@ -64,7 +65,7 @@ namespace GradePointAverageCalulatorForSWPU {
                 Main.HistoryReaded = "";
                 Close();
             } catch (Exception ex) {
-                MessageBox.Show(ex.Message, ex.GetType().Name, MessageBoxButton.OK, MessageBoxImage.Error);
+                Message.ShowError(ex.Message, ex.GetType().Name);
             }
         }
     }

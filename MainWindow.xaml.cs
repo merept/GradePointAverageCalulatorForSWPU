@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MessageUtil;
+using System;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -33,7 +34,7 @@ namespace GradePointAverageCalulatorForSWPU {
             "C语言 3.5 81\n";
 
         public MainWindow() {
-            if (MessageBox.Show(helpText, "使用前必读!!!", MessageBoxButton.OKCancel, MessageBoxImage.Asterisk) == MessageBoxResult.Cancel)
+            if (Message.ShowOKCancelDialog(helpText, "使用前必读!!!") == MessageBoxResult.Cancel)
                 Environment.Exit(0);
             HistoryReaded = "";
             InitializeComponent();
@@ -51,7 +52,7 @@ namespace GradePointAverageCalulatorForSWPU {
                          $"已通过学分: {gpa.TotalNotFailedPoint}\n" +
                          $"不及格科目数: {gpa.Fails}\n" +
                          $"平均学分绩点: {gpa.Result:0.00}";
-            var messageBoxResult = MessageBox.Show($"{result}", "结果", MessageBoxButton.OKCancel, MessageBoxImage.Asterisk);
+            var messageBoxResult = Message.ShowInformation($"{result}", "结果");
             return messageBoxResult == MessageBoxResult.OK;
         }
 

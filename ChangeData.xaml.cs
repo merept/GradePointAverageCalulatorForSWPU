@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MessageUtil;
+using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
@@ -37,7 +38,7 @@ namespace GradePointAverageCalulatorForSWPU {
                 if (!string.IsNullOrEmpty(Point.Text))
                     point = Convert.ToDouble(Point.Text);
             } catch (FormatException) {
-                MessageBox.Show("请输入正确的数值", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                Message.ShowError("请输入正确的数值");
                 return;
             }
             GradePointAverage.Change(GradesAndPoints[Index], new GradeAndPoint(name, grade, point));
