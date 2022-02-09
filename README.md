@@ -12,15 +12,21 @@
 
 ### 更新
 
+- [2022.2.9 更新 V0.4.1](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V0.4.1)
+
+> 1.更新了历史记录的存储方式，优化了对于相同数据的查重判定，现在结果详情页修改数据可同步至历史记录，历史记录的名称可重命名
+>
+> 2.上一次退出时输入的数据可以保存了，在有历史记录的情况下，关闭程序重新进入会保留上一次输入的内容
+
 - [2022.1.27 更新 V0.3.5](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V0.3.5)
 
 > 优化了一些操作逻辑
 
 - [2022.1.27 更新 V0.3.4](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V0.3.4)
 
-> 修复了历史记录窗口双击空白处会闪退的bug
+> 1.修复了历史记录窗口双击空白处会闪退的bug
 >
-> 优化了操作逻辑，双击历史记录后会自动打开结果
+> 2.优化了操作逻辑，双击历史记录后会自动打开结果
 
 - [2022.1.20 更新 V0.3.3](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V0.3.3)
 

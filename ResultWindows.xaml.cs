@@ -7,11 +7,13 @@ namespace GradePointAverageCalulatorForSWPU {
     /// </summary>
     public partial class ResultWindows : Window {
         private GradePointAverage GradePointAverage { get; }
+        private History History { get; }
 
-        public ResultWindows(GradePointAverage GPA) {
+        public ResultWindows(GradePointAverage GPA, History history) {
             InitializeComponent();
             KeyDown += Esc_Key_Down;
             GradePointAverage = GPA;
+            History = history;
             Results.ItemsSource = GradePointAverage.GradesAndPoints;
             ResultOfGpa.Content = $"总修读学分: {GradePointAverage.TotalPoint} " +
                 $"已通过学分: {GradePointAverage.TotalNotFailedPoint} " +
@@ -25,7 +27,7 @@ namespace GradePointAverageCalulatorForSWPU {
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e) {
-            new ChangeData(Results.SelectedIndex, GradePointAverage.GradesAndPoints, GradePointAverage).ShowDialog();
+            new ChangeData(Results.SelectedIndex, History, GradePointAverage.GradesAndPoints, GradePointAverage).ShowDialog();
             ResultOfGpa.Content = $"总修读学分: {GradePointAverage.TotalPoint} " +
                 $"已通过学分: {GradePointAverage.TotalNotFailedPoint} " +
                 $"不及格科目数: {GradePointAverage.Fails} " +

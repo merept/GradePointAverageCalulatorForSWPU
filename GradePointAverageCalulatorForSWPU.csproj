@@ -96,8 +96,11 @@
     <Compile Include="ChangeData.xaml.cs">
       <DependentUpon>ChangeData.xaml</DependentUpon>
     </Compile>
-    <Compile Include="History.xaml.cs">
-      <DependentUpon>History.xaml</DependentUpon>
+    <Compile Include="HistoryRenameWindow.xaml.cs">
+      <DependentUpon>HistoryRenameWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="HistoryWindow.xaml.cs">
+      <DependentUpon>HistoryWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="ResultWindows.xaml.cs">
       <DependentUpon>ResultWindows.xaml</DependentUpon>
@@ -109,7 +112,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="History.xaml">
+    <Page Include="HistoryRenameWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="HistoryWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

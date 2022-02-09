@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 
 namespace GradePointAverageCalulatorForSWPU {
-    public class GradePointAverage : INotifyPropertyChanged {
+    [Serializable]
+    public class GradePointAverage : IEquatable<GradePointAverage> {
         public double TotalPoint { get; set; }
         public double TotalNotFailedPoint { get; set; }
         public double TotalGrade { get; set; }
@@ -51,14 +54,33 @@ namespace GradePointAverageCalulatorForSWPU {
             AddIn(after.Point, after.Grade);
         }
 
-        #region
-        public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged(PropertyChangedEventArgs e) {
-            PropertyChanged.Invoke(this, e);
+        public override bool Equals(object obj) {
+            return Equals(obj as GradePointAverage);
         }
-        #endregion
+
+        public bool Equals(GradePointAverage other) {
+            return other != null &&
+                   TotalPoint == other.TotalPoint &&
+                   TotalNotFailedPoint == other.TotalNotFailedPoint &&
+                   TotalGrade == other.TotalGrade &&
+                   GradesAndPoints.SequenceEqual(other.GradesAndPoints) &&
+                   Fails == other.Fails &&
+                   Result == other.Result;
+        }
+
+        public override int GetHashCode() {
+            int hashCode = 1009407815;
+            hashCode = hashCode * -1521134295 + TotalPoint.GetHashCode();
+            hashCode = hashCode * -1521134295 + TotalNotFailedPoint.GetHashCode();
+            hashCode = hashCode * -1521134295 + TotalGrade.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<BindingList<GradeAndPoint>>.Default.GetHashCode(GradesAndPoints);
+            hashCode = hashCode * -1521134295 + Fails.GetHashCode();
+            hashCode = hashCode * -1521134295 + Result.GetHashCode();
+            return hashCode;
+        }
     }
 
+    [Serializable]
     public class GradeAndPoint : INotifyPropertyChanged {
         public string Name { get; set; }
         public double Grade { get; set; }
@@ -76,6 +98,7 @@ namespace GradePointAverageCalulatorForSWPU {
         }
 
         #region
+        [field: NonSerialized()]
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(PropertyChangedEventArgs e) {
             PropertyChanged.Invoke(this, e);
@@ -96,5 +119,50 @@ namespace GradePointAverageCalulatorForSWPU {
             return hashCode;
         }
         #endregion
+    }
+
+    [Serializable]
+    public class History : IEquatable<History>, INotifyPropertyChanged {
+        public string UpdateTime { get; set; }
+        public string HistoryName { get; set; }
+        public GradePointAverage GradePointAverage { get; set; }
+        public string LastTime { get; set; }
+
+        public History(GradePointAverage gradePointAverage) {
+            UpdateTime = $"{DateTime.Now:yyyy/MM/dd H:mm:ss}";
+            HistoryName = $"{DateTime.Now.Date:yyyy-MM-dd}";
+            GradePointAverage = gradePointAverage;
+        }
+
+        public History(string lastTime) {
+            LastTime = lastTime;
+        }
+
+        public override bool Equals(object obj) {
+            return Equals(obj as History);
+        }
+
+        public bool Equals(History other) {
+            return other != null &&
+                   EqualityComparer<GradePointAverage>.Default.Equals(GradePointAverage, other.GradePointAverage);
+        }
+
+        public override int GetHashCode() {
+            return -1533900655 + EqualityComparer<GradePointAverage>.Default.GetHashCode(GradePointAverage);
+        }
+
+        public static bool operator ==(History left, History right) {
+            return EqualityComparer<History>.Default.Equals(left, right);
+        }
+
+        public static bool operator !=(History left, History right) {
+            return !(left == right);
+        }
+
+        [field: NonSerialized()]
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged(PropertyChangedEventArgs e) {
+            PropertyChanged.Invoke(this, e);
+        }
     }
 }

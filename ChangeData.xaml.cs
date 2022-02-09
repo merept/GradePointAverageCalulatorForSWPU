@@ -12,11 +12,13 @@ namespace GradePointAverageCalulatorForSWPU {
         private int Index { get; }
         private BindingList<GradeAndPoint> GradesAndPoints { get; }
         private GradePointAverage GradePointAverage { get; }
+        private History History { get; set; }
 
-        public ChangeData(int index, BindingList<GradeAndPoint> gradesAndPoints, GradePointAverage gradePointAverage) {
+        public ChangeData(int index, History history, BindingList<GradeAndPoint> gradesAndPoints, GradePointAverage gradePointAverage) {
             InitializeComponent();
             KeyDown += Esc_Key_Down;
             Index = index;
+            History = history;
             GradesAndPoints = gradesAndPoints;
             GradePointAverage = gradePointAverage;
         }
@@ -44,6 +46,7 @@ namespace GradePointAverageCalulatorForSWPU {
             GradePointAverage.Change(GradesAndPoints[Index], new GradeAndPoint(name, grade, point));
             GradesAndPoints.Remove(GradesAndPoints[Index]);
             GradesAndPoints.Insert(Index, new GradeAndPoint(name, grade, point));
+            History.UpdateTime = $"{DateTime.Now}";
             Close();
         }
     }
