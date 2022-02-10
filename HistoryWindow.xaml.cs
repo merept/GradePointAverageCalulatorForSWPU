@@ -50,7 +50,19 @@ namespace GradePointAverageCalulatorForSWPU {
         }
 
         private void Rename_Click(object sender, RoutedEventArgs e) {
+            if (Historys.SelectedItem == null)
+                return;
             new HistoryRenameWindow(Main.Histories, Historys.SelectedIndex).ShowDialog();
+        }
+
+        private void Delete_Click(object sender, RoutedEventArgs e) {
+            if (Historys.SelectedItem == null)
+                return;
+            if (Message.ShowYesNoCancelDialog("是否删除该条历史记录?", "警告", MessageBoxImage.Warning) != MessageBoxResult.Yes)
+                return;
+            if (Main.Histories.Remove(Main.Histories[Historys.SelectedIndex])) {
+                Message.ShowInformation("删除成功", "提示");
+            } else Message.ShowError("删除失败\n未知错误");
         }
     }
 }

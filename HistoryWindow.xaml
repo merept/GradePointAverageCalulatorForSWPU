@@ -18,8 +18,8 @@
             </ListView.View>
             <ListBox.ContextMenu>
                 <ContextMenu>
-                    <MenuItem x:Name="Rename" Header="重命名" Click="Rename_Click">
-                    </MenuItem>
+                    <MenuItem x:Name="Delete" Header="删除" Click="Delete_Click"/>
+                    <MenuItem x:Name="Rename" Header="重命名" Click="Rename_Click"/>
                 </ContextMenu>
             </ListBox.ContextMenu>
         </ListView>

@@ -18,6 +18,11 @@ namespace GradePointAverageCalulatorForSWPU {
         public static string HistoryFileName { get; } = $"\\{Environment.UserName}.gpa";
         public readonly string helpText = "欢迎来到SWPU平均学分绩点计算器!\n" +
             "\n" +
+            "2022.2.10更新 version 0.4.2\n" +
+            "1.新增了删除单条历史记录的功能\n" +
+            "2.修复了当输入框有空格或换行依旧能输出结果的错误\n" +
+            "3.修复了在结果详情及历史记录窗口未选中条目依旧能使用右键菜单的错误\n" +
+            "\n" +
             "2022.2.9更新 version 0.4.1\n" +
             "1.更新了历史记录的存储方式，优化了对于相同数据的查重判定，现在结果详情页修改数据可同步至历史记录，历史记录的名称可重命名\n" +
             "2.上一次退出时输入的数据可以保存了，在有历史记录的情况下，关闭程序重新进入会保留上一次输入的内容\n" +
@@ -119,7 +124,7 @@ namespace GradePointAverageCalulatorForSWPU {
         }
 
         private void BeginCalculate_Click(object sender, RoutedEventArgs e) {
-            if (string.IsNullOrEmpty(GradesAndPoints.Text)) {
+            if (string.IsNullOrWhiteSpace(GradesAndPoints.Text)) {
                 MessageBox.Show("请输入内容!", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }

@@ -27,6 +27,8 @@ namespace GradePointAverageCalulatorForSWPU {
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e) {
+            if (Results.SelectedItem == null)
+                return;
             new ChangeData(Results.SelectedIndex, History, GradePointAverage.GradesAndPoints, GradePointAverage).ShowDialog();
             ResultOfGpa.Content = $"总修读学分: {GradePointAverage.TotalPoint} " +
                 $"已通过学分: {GradePointAverage.TotalNotFailedPoint} " +
