@@ -60,4 +60,8 @@
 电路 5 73
 C语言 3.5 81
 ```
+### 关于如何备份历史记录
 
+[查看说明（GitHub）](https://github.com/merept/GradePointAverageCalulatorForSWPU/blob/master/关于如何备份历史记录.md)
+
+[查看说明（Gitee）](https://gitee.com/merept/GradePointAverageCalulatorForSWPU/blob/master/关于如何备份历史记录.md)
