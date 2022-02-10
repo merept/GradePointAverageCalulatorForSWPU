@@ -12,6 +12,14 @@
 
 ### 更新
 
+- [2022.2.10 更新 V0.4.2](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V0.4.2)
+
+> 1.新增了删除单条历史记录的功能
+>
+> 2.修复了当输入框有空格或换行依旧能输出结果的错误
+>
+> 3.修复了在结果详情及历史记录窗口未选中条目依旧能使用右键菜单的错误
+
 - [2022.2.9 更新 V0.4.1](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V0.4.1)
 
 > 1.更新了历史记录的存储方式，优化了对于相同数据的查重判定，现在结果详情页修改数据可同步至历史记录，历史记录的名称可重命名
@@ -60,6 +68,7 @@
 电路 5 73
 C语言 3.5 81
 ```
+
 ### 关于如何备份历史记录
 
 [查看说明（GitHub）](https://github.com/merept/GradePointAverageCalulatorForSWPU/blob/master/关于如何备份历史记录.md)
