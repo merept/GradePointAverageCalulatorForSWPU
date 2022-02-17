@@ -3,26 +3,20 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+        xmlns:wfi ="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration"
         xmlns:local="clr-namespace:GradePointAverageCalulatorForSWPU"
         mc:Ignorable="d"
         Title="历史记录" Height="300" Width="500" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
     <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Height="300" Width="500">
-        
-        <Button x:Name="Clear" Content="清空历史记录" FontSize="9" Height="15" Width="120" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="25,25,0,0" Click="Clear_Click"/>
-        <ListView x:Name="Historys" Height="200" Width="450" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,50,0,0" MouseDoubleClick="ListBox_MouseDoubleClick">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn x:Name="HistoryName" Header="名称" Width="100" DisplayMemberBinding="{Binding HistoryName}"/>
-                    <GridViewColumn x:Name="UpdateTime" Header="修改时间" Width="350" DisplayMemberBinding="{Binding UpdateTime}"/>
-                </GridView>
-            </ListView.View>
-            <ListBox.ContextMenu>
-                <ContextMenu>
-                    <MenuItem x:Name="Delete" Header="删除" Click="Delete_Click"/>
-                    <MenuItem x:Name="Rename" Header="重命名" Click="Rename_Click"/>
-                </ContextMenu>
-            </ListBox.ContextMenu>
-        </ListView>
+        <wfi:WindowsFormsHost Height="20" Width="120" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="25,20,0,0">
+            <wf:Button x:Name="Clear" Text="清空历史记录" Height="15" Width="120" Margin="25,25,0,0" Click="Clear_Click"/>
+        </wfi:WindowsFormsHost>
+        <wfi:WindowsFormsHost HorizontalAlignment="Center" VerticalAlignment="Center" Height="200" Width="450">
+            <wf:ListView FullRowSelect="True" View="Details" x:Name="Historys" Height="200" Width="450"  MouseDoubleClick="ListBox_MouseDoubleClick">
+            </wf:ListView>
+        </wfi:WindowsFormsHost>
+
 
     </Grid>
 </Window>

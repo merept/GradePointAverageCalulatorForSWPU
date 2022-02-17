@@ -12,6 +12,10 @@
 
 ### 更新
 
+- [2022.2.17 更新 V0.4.3](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V0.4.3)
+
+> 优化了视觉效果和部分操作逻辑，控件外观匹配当前系统
+
 - [2022.2.11 更新 V0.4.2](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V0.4.2)
 
 > 1.新增了删除单条历史记录的功能

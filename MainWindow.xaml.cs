@@ -7,6 +7,11 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
+using MessageBox = System.Windows.Forms.MessageBox;
+using MessageBoxImage = System.Windows.Forms.MessageBoxIcon;
+using MessageBoxButton = System.Windows.Forms.MessageBoxButtons;
+using MessageBoxResult = System.Windows.Forms.DialogResult;
+using System.Drawing;
 
 namespace GradePointAverageCalulatorForSWPU {
     /// <summary>
@@ -18,15 +23,14 @@ namespace GradePointAverageCalulatorForSWPU {
         public static string HistoryFileName { get; } = $"\\{Environment.UserName}.gpa";
         public readonly string helpText = "欢迎来到SWPU平均学分绩点计算器!\n" +
             "\n" +
+            "2022.2.17更新 version 0.4.3\n" +
+            "1.优化了视觉效果和部分操作逻辑，控件外观匹配当前系统\n" +
+            "\n" +
             "2022.2.10更新 version 0.4.2\n" +
             "1.新增了删除单条历史记录的功能\n" +
             "2.修复了当输入框有空格或换行依旧能输出结果的错误\n" +
             "3.修复了在结果详情及历史记录窗口未选中条目依旧能使用右键菜单的错误\n" +
             "\n" +
-            "2022.2.9更新 version 0.4.1\n" +
-            "1.更新了历史记录的存储方式，优化了对于相同数据的查重判定，现在结果详情页修改数据可同步至历史记录，历史记录的名称可重命名\n" +
-            "2.上一次退出时输入的数据可以保存了，在有历史记录的情况下，关闭程序重新进入会保留上一次输入的内容\n" +
-            "\n"+
             "请在输入框输入您每科的学分及期末成绩，并点击输入框下方 ”开始计算“ 按钮进行计算\n" +
             "输入时请严格遵守一下几点:\n" +
             "1.以先输入学分再输入成绩的顺序，否侧结果可能会出错\n" +
@@ -40,11 +44,19 @@ namespace GradePointAverageCalulatorForSWPU {
         public BindingList<History> Histories { get; set; } = new BindingList<History>();
 
         public MainWindow() {
+            System.Windows.Forms.Application.EnableVisualStyles();
             if (Message.ShowOKCancelDialog(helpText, "使用前必读!!!") == MessageBoxResult.Cancel)
                 Environment.Exit(0);
             Loaded += MainWindow_Loaded;
             Closing += MainWindow_Closing; 
             InitializeComponent();
+            BeginCalculate.Font = new Font(BeginCalculate.Font.FontFamily, 10);
+            BeginCalculate.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            BeginCalculate.FlatAppearance.BorderColor = Color.AliceBlue;
+            BeginCalculate.Focus();
+            History.Font = new Font(History.Font.FontFamily, 10);
+            History.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            GradesAndPoints.Font = new Font(GradesAndPoints.Font.FontFamily, 13);
             KeyDown += Esc_Key_Down;
         }
 
@@ -70,7 +82,7 @@ namespace GradePointAverageCalulatorForSWPU {
             }
         }
 
-        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
+        private void MainWindow_Closing(object sender, CancelEventArgs e) {
             try {
                 if (Histories.Count != 0) {
                     Histories.First().LastTime = GradesAndPoints.Text;
@@ -107,7 +119,7 @@ namespace GradePointAverageCalulatorForSWPU {
             if (!Histories.Contains(history))
                 Histories.Add(history);
             if (MessageBoxShow(gpa)) {
-                new ResultWindows(Histories.Last().GradePointAverage, history).Show();
+                new ResultWindows(Histories.Last().GradePointAverage, Histories, Histories.IndexOf(Histories.Last())).Show();
             } else return;
         }
 
@@ -119,11 +131,11 @@ namespace GradePointAverageCalulatorForSWPU {
             if (!Histories.Contains(history))
                 Histories.Add(history);
             if (MessageBoxShow(gpa)) {
-                new ResultWindowWithNames(Histories.Last().GradePointAverage, history).Show();
+                new ResultWindowWithNames(Histories.Last().GradePointAverage, Histories, Histories.IndexOf(Histories.Last())).Show();
             } else return;
         }
 
-        private void BeginCalculate_Click(object sender, RoutedEventArgs e) {
+        private void BeginCalculate_Click(object sender, EventArgs e) {
             if (string.IsNullOrWhiteSpace(GradesAndPoints.Text)) {
                 MessageBox.Show("请输入内容!", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
@@ -135,7 +147,7 @@ namespace GradePointAverageCalulatorForSWPU {
             } else ShowResult(dataMatches, nameMatches);
         }
 
-        private void History_Click(object sender, RoutedEventArgs e) {
+        private void History_Click(object sender, EventArgs e) {
             new HistoryWindow(this).ShowDialog();
         }
     }

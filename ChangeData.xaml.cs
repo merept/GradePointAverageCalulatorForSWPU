@@ -1,6 +1,7 @@
 ﻿using MessageUtil;
 using System;
 using System.ComponentModel;
+using System.Drawing;
 using System.Windows;
 using System.Windows.Input;
 
@@ -16,7 +17,13 @@ namespace GradePointAverageCalulatorForSWPU {
 
         public ChangeData(int index, History history, BindingList<GradeAndPoint> gradesAndPoints, GradePointAverage gradePointAverage) {
             InitializeComponent();
+            Change.Font = new Font(Change.Font.FontFamily, 7);
+            Change.Enabled = false;
+            Change.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            Change.FlatAppearance.BorderColor = Color.AliceBlue;
+            Change.Focus();
             KeyDown += Esc_Key_Down;
+            KeyDown += Enter_Key_Down;
             Index = index;
             History = history;
             GradesAndPoints = gradesAndPoints;
@@ -28,7 +35,12 @@ namespace GradePointAverageCalulatorForSWPU {
                 Close();
         }
 
-        private void Change_Click(object sender, RoutedEventArgs e) {
+        private void Enter_Key_Down(object sender, KeyEventArgs e) {
+            if (e.Key == Key.Enter)
+                Change_Click(null, null);
+        }
+
+        private void Change_Click(object sender, EventArgs e) {
             var name = GradesAndPoints[Index].Name;
             var grade = GradesAndPoints[Index].Grade;
             var point = GradesAndPoints[Index].Point;
@@ -48,6 +60,24 @@ namespace GradePointAverageCalulatorForSWPU {
             GradesAndPoints.Insert(Index, new GradeAndPoint(name, grade, point));
             History.UpdateTime = $"{DateTime.Now}";
             Close();
+        }
+
+        private void Name_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e) {
+            TextChanged();
+        }
+
+        private void Point_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e) {
+            TextChanged();
+        }
+
+        private void Grade_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e) {
+            TextChanged();
+        }
+
+        private void TextChanged() {
+            if (!(string.IsNullOrWhiteSpace(Name.Text) && string.IsNullOrWhiteSpace(Grade.Text) && string.IsNullOrWhiteSpace(Point.Text))) {
+                Change.Enabled = true;
+            } else Change.Enabled = false;
         }
     }
 }

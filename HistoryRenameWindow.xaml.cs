@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Drawing;
 using System.Windows;
 using System.Windows.Input;
 
@@ -15,7 +16,16 @@ namespace GradePointAverageCalulatorForSWPU {
             Histories = histories;
             Index = index;
             KeyDown += Esc_Key_Down;
+            KeyDown += Enter_Key_Down;
             InitializeComponent();
+            Rename.Font = new Font(Rename.Font.FontFamily, 8);
+            Rename.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            Rename.FlatAppearance.BorderColor = Color.AliceBlue;
+        }
+
+        private void Enter_Key_Down(object sender, KeyEventArgs e) {
+            if (e.Key == Key.Enter)
+                Rename_Click(null, null);
         }
 
         private void Esc_Key_Down(object sender, KeyEventArgs e) {
@@ -23,7 +33,7 @@ namespace GradePointAverageCalulatorForSWPU {
                 Close();
         }
 
-        private void Rename_Click(object sender, RoutedEventArgs e) {
+        private void Rename_Click(object sender, EventArgs e) {
             if (string.IsNullOrWhiteSpace(Name.Text)) {
                 return;
             } else {
@@ -34,6 +44,12 @@ namespace GradePointAverageCalulatorForSWPU {
                 Histories.Insert(Index, history);
             }
             Close();
+        }
+
+        private void Name_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e) {
+            if (!string.IsNullOrWhiteSpace(Name.Text)) {
+                Rename.Enabled = true;
+            } else Rename.Enabled = false;
         }
     }
 }

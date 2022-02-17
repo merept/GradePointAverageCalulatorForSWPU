@@ -3,15 +3,24 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+        xmlns:wfi ="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration"
         xmlns:local="clr-namespace:GradePointAverageCalulatorForSWPU"
         mc:Ignorable="d"
         Title="SWPU学分绩点计算器" Height="500" Width="800" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
     <Grid>
-        <TextBox x:Name="GradesAndPoints" HorizontalAlignment="Center" TextWrapping="Wrap" Text="" Width="750" FontSize="18" AcceptsReturn="True" VerticalAlignment="Top" Height="380"/>
+        <wfi:WindowsFormsHost HorizontalAlignment="Center" VerticalAlignment="Top" Width="750" Height="380">
+            <wf:TextBox x:Name="GradesAndPoints" BorderStyle="Fixed3D" Multiline="True" Text="" Width="750" AcceptsReturn="True" Height="380"/>
+        </wfi:WindowsFormsHost>
+        
 
         <Grid Margin="0,390,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" Width="350" Height="60">
-            <Button x:Name="BeginCalculate" Content="查看结果" HorizontalAlignment="Left" Height="40" Width="150" FontSize="15" Click="BeginCalculate_Click" VerticalAlignment="Center"/>
-            <Button x:Name="History" Content="历史记录" HorizontalAlignment="Right" VerticalAlignment="Center" Height="40" Width="150" FontSize="15" Click="History_Click"/>
+            <wfi:WindowsFormsHost HorizontalAlignment="Left" Height="40" VerticalAlignment="Center" Width="149">
+                <wf:Button x:Name="BeginCalculate"  Text="查看结果" Height="40" Width="150" Click="BeginCalculate_Click"/>
+            </wfi:WindowsFormsHost>
+            <wfi:WindowsFormsHost HorizontalAlignment="Right" Height="40" VerticalAlignment="Center" Width="149">
+                <wf:Button x:Name="History" Text="历史记录" Height="40" Width="150" Click="History_Click"/>
+            </wfi:WindowsFormsHost>
         </Grid>
 
     </Grid>

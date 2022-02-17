@@ -3,25 +3,15 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+        xmlns:wfi ="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration"
         xmlns:local="clr-namespace:GradePointAverageCalulatorForSWPU"
         mc:Ignorable="d"
         Title="结果" Height="300" Width="500" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
     <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Height="250" Width="450">
-        <ListView x:Name="Results" HorizontalAlignment="Center" VerticalAlignment="Top" Width="450" Height="200" FontSize="10">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="学科名称" Width="150" DisplayMemberBinding="{Binding Name}"/>
-                    <GridViewColumn Header="学分" Width="150" DisplayMemberBinding="{Binding Point}"/>
-                    <GridViewColumn Header="成绩" Width="150" DisplayMemberBinding="{Binding Grade}"/>
-                </GridView>
-            </ListView.View>
-            <ListView.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Header="修改" Click="MenuItem_Click"/>
-                </ContextMenu>
-            </ListView.ContextMenu>
-        </ListView>
+        <wfi:WindowsFormsHost HorizontalAlignment="Center" VerticalAlignment="Top" Width="450" Height="200">
+            <wf:ListView FullRowSelect="True" View="Details" x:Name="Results" Width="450" Height="200"/>
+        </wfi:WindowsFormsHost>
         <Label x:Name="ResultOfGpa" Content="总修读学分: {GPA.TotalPoint} 已通过学分: {GPA.TotalNotFailedPoint} 不及格科目数: {GPA.Fails} 平均学分绩点: {GPA.Result:0.00}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,0,20"/>
-
     </Grid>
 </Window>
