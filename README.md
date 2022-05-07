@@ -12,6 +12,10 @@
 
 ### 更新
 
+- [2022.5.7 更新 V0.4.4](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V0.4.4)
+
+> 新增了异常日志记录（使用 MereyLog 进行记录）
+
 - [2022.2.17 更新 V0.4.3](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V0.4.3)
 
 > 优化了视觉效果和部分操作逻辑，控件外观匹配当前系统

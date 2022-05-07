@@ -72,6 +72,9 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MerelyLogTool">
+      <HintPath>MerelyLogTool\MerelyLogTool.dll</HintPath>
+    </Reference>
     <Reference Include="MessageUtil, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>MessageUtil\MessageUtil.dll</HintPath>

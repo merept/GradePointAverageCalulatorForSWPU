@@ -12,24 +12,24 @@ using MessageBoxImage = System.Windows.Forms.MessageBoxIcon;
 using MessageBoxButton = System.Windows.Forms.MessageBoxButtons;
 using MessageBoxResult = System.Windows.Forms.DialogResult;
 using System.Drawing;
+using MerelyLogTool;
 
 namespace GradePointAverageCalulatorForSWPU {
     /// <summary>
     /// MainWindow.xaml 的交互逻辑
     /// </summary>
     public partial class MainWindow : Window {
+        public static string Version { get; } = "V0.4.4";
         public static string HistoryFilePath { get; } = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + 
             @"\GradePointAverageCalulatorForSWPU\";
         public static string HistoryFileName { get; } = $"\\{Environment.UserName}.gpa";
         public readonly string helpText = "欢迎来到SWPU平均学分绩点计算器!\n" +
             "\n" +
+            "2022.5.7更新 version 0.4.4\n" +
+            "1.新增了异常日志记录（使用 MereyLog 进行记录）\n" +
+            "\n" +
             "2022.2.17更新 version 0.4.3\n" +
             "1.优化了视觉效果和部分操作逻辑，控件外观匹配当前系统\n" +
-            "\n" +
-            "2022.2.10更新 version 0.4.2\n" +
-            "1.新增了删除单条历史记录的功能\n" +
-            "2.修复了当输入框有空格或换行依旧能输出结果的错误\n" +
-            "3.修复了在结果详情及历史记录窗口未选中条目依旧能使用右键菜单的错误\n" +
             "\n" +
             "请在输入框输入您每科的学分及期末成绩，并点击输入框下方 ”开始计算“ 按钮进行计算\n" +
             "输入时请严格遵守一下几点:\n" +
@@ -42,6 +42,8 @@ namespace GradePointAverageCalulatorForSWPU {
             "电路 5 73\n" +
             "C语言 3.5 81\n";
         public BindingList<History> Histories { get; set; } = new BindingList<History>();
+        public static MerelyLog Log { get; } = new MerelyLog(HistoryFilePath, "GPAC_log", Version, LogMode.XML);
+
 
         public MainWindow() {
             System.Windows.Forms.Application.EnableVisualStyles();
@@ -78,6 +80,7 @@ namespace GradePointAverageCalulatorForSWPU {
                     GradesAndPoints.Text = Histories.First().LastTime;
                 }
             } catch (Exception ex) {
+                Log.Log(ex, "窗口加载时出错", ex.Message);
                 Message.ShowError(ex.Message, ex.GetType().Name);
             }
         }
@@ -92,6 +95,7 @@ namespace GradePointAverageCalulatorForSWPU {
                 formatter.Serialize(fs, Histories);
                 fs.Close();
             } catch (Exception ex) {
+                Log.Log(ex, "窗口关闭时出错", ex.Message);
                 Message.ShowError(ex.Message, ex.GetType().Name);
             }
         }

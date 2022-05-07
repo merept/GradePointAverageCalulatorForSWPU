@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MerelyLogTool</name>
+    </assembly>
+    <members>
+        <member name="T:MerelyLogTool.LogMode">
+            <summary>
+            MerelyLog 生成日志的方式
+            </summary>
+        </member>
+        <member name="F:MerelyLogTool.LogMode.XML">
+            <summary>
+            以 XML 的方式生成日志
+            </summary>
+        </member>
+        <member name="F:MerelyLogTool.LogMode.TXT">
+            <summary>
+            以 TXT 的方式生成日志
+            </summary>
+        </member>
+        <member name="T:MerelyLogTool.MerelyLog">
+            <summary>
+            MerePT专属日志生产工具
+            </summary>
+        </member>
+        <member name="P:MerelyLogTool.MerelyLog.ApplicationPath">
+            <summary>
+            应用程序日志存放路径
+            </summary>
+        </member>
+        <member name="P:MerelyLogTool.MerelyLog.ApplicationName">
+            <summary>
+            应用程序名称
+            </summary>
+        </member>
+        <member name="P:MerelyLogTool.MerelyLog.ApplicationVersion">
+            <summary>
+            应用程序版本
+            </summary>
+        </member>
+        <member name="P:MerelyLogTool.MerelyLog.TxtName">
+            <summary>
+            TXT版本日志文件名称，命名方式为 "应用程序名称.log"
+            </summary>
+        </member>
+        <member name="P:MerelyLogTool.MerelyLog.XmlName">
+            <summary>
+            XML版本日志文件名称，命名方式为 "应用程序名称.xml"
+            </summary>
+        </member>
+        <member name="P:MerelyLogTool.MerelyLog.LogMode">
+            <summary>
+            日志记录的模式，可选XML与TXT
+            </summary>
+        </member>
+        <member name="M:MerelyLogTool.MerelyLog.#ctor(System.String,System.String,System.String,MerelyLogTool.LogMode)">
+            <summary>
+            初始化一个新的 MerelyLog 对象
+            </summary>
+            <param name="path">应用程序日志存放路径</param>
+            <param name="name">应用程序名称</param>
+            <param name="version">应用程序版本</param>
+            <param name="mode">日志记录的模式，可选XML与TXT</param>
+        </member>
+        <member name="M:MerelyLogTool.MerelyLog.Log(System.Exception,System.String,System.String)">
+            <summary>
+            以已选择的 LogMode 方式记录日志
+            </summary>
+            <param name="ex">引发的异常</param>
+            <param name="reason">引发异常的原因</param>
+            <param name="message">异常的Message</param>
+        </member>
+    </members>
+</doc>
