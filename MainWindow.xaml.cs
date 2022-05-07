@@ -19,7 +19,7 @@ namespace GradePointAverageCalulatorForSWPU {
     /// MainWindow.xaml 的交互逻辑
     /// </summary>
     public partial class MainWindow : Window {
-        public static string Version { get; } = "V0.4.4";
+        public static string Version { get; } = "V0.4.4.2";
         public static string HistoryFilePath { get; } = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + 
             @"\GradePointAverageCalulatorForSWPU\";
         public static string HistoryFileName { get; } = $"\\{Environment.UserName}.gpa";
@@ -80,7 +80,7 @@ namespace GradePointAverageCalulatorForSWPU {
                     GradesAndPoints.Text = Histories.First().LastTime;
                 }
             } catch (Exception ex) {
-                Log.Log(ex, "窗口加载时出错", ex.Message);
+                Log.Log(ex, "窗口加载时出错");
                 Message.ShowError(ex.Message, ex.GetType().Name);
             }
         }
@@ -95,7 +95,7 @@ namespace GradePointAverageCalulatorForSWPU {
                 formatter.Serialize(fs, Histories);
                 fs.Close();
             } catch (Exception ex) {
-                Log.Log(ex, "窗口关闭时出错", ex.Message);
+                Log.Log(ex, "窗口关闭时出错");
                 Message.ShowError(ex.Message, ex.GetType().Name);
             }
         }

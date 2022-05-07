@@ -63,7 +63,7 @@
             <param name="version">应用程序版本</param>
             <param name="mode">日志记录的模式，可选XML与TXT</param>
         </member>
-        <member name="M:MerelyLogTool.MerelyLog.Log(System.Exception,System.String,System.String)">
+        <member name="M:MerelyLogTool.MerelyLog.Log(System.Exception,System.String)">
             <summary>
             以已选择的 LogMode 方式记录日志
             </summary>
