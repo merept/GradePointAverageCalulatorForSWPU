@@ -12,51 +12,23 @@
 
 ### 更新
 
+- [2022.5.7 更新 V0.5](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V0.5)
+
+> 重大功能更新：
+>
+> 现在可以直接把教务系统成绩页里的全部内容复制过来，粘贴好后直接点击 “开始计算” 即可获得结果，无需再做更改以前的方法依然可用
+
 - [2022.5.7 更新 V0.4.4](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V0.4.4)
 
 > 新增了异常日志记录（使用 MereyLog 进行记录）
 
-- [2022.2.17 更新 V0.4.3](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V0.4.3)
-
-> 优化了视觉效果和部分操作逻辑，控件外观匹配当前系统
-
-- [2022.2.11 更新 V0.4.2](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V0.4.2)
-
-> 1.新增了删除单条历史记录的功能
->
-> 2.修复了当输入框有空格或换行依旧能输出结果的错误
->
-> 3.修复了在结果详情及历史记录窗口未选中条目依旧能使用右键菜单的错误
-
-- [2022.2.9 更新 V0.4.1](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V0.4.1)
-
-> 1.更新了历史记录的存储方式，优化了对于相同数据的查重判定，现在结果详情页修改数据可同步至历史记录，历史记录的名称可重命名
->
-> 2.上一次退出时输入的数据可以保存了，在有历史记录的情况下，关闭程序重新进入会保留上一次输入的内容
-
-- [2022.1.27 更新 V0.3.5](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V0.3.5)
-
-> 优化了一些操作逻辑
-
-- [2022.1.27 更新 V0.3.4](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V0.3.4)
-
-> 1.修复了历史记录窗口双击空白处会闪退的bug
->
-> 2.优化了操作逻辑，双击历史记录后会自动打开结果
-
-- [2022.1.20 更新 V0.3.3](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V0.3.3)
-
-> 增加历史记录功能，可快捷查看历史记录
-
-- [2022.1.15 更新 V0.3.1](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V0.3.1)
-
-> 优化了电源的使用情况，减少耗电以及CPU占用
+- [更多历史版本更新内容](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases)
 
 ### 使用说明
 
-请在输入框输入您每科的学分及期末成绩，并点击输入框下方 ”开始计算“ 按钮进行计算
+请在输入框输入您每科的学分及期末成绩，**可直接将教务系统成绩页的全部内容粘贴进输入框**，并点击输入框下方 ”开始计算“ 按钮进行计算
 
-输入时请严格遵守以下几点：
+输入时请严格遵守以下几点（**直接粘贴结果时不用管这里，直接计算结果即可**）：
 
 - 以先输入学分再输入成绩的顺序，否则结果可能会出错 
 - 每个数据之间需用任何除数字和小数点外的符号进行间隔
@@ -69,6 +41,8 @@
 如出现错误可以右击错误的成绩进行修改
 
 ### 输入示例
+
+> **直接粘贴结果时不用管这里，直接计算结果即可**
 
 ```
 高数 5 71
