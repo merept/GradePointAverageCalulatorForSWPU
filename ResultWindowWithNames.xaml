@@ -7,11 +7,16 @@
         xmlns:wfi ="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration"
         xmlns:local="clr-namespace:GradePointAverageCalulatorForSWPU"
         mc:Ignorable="d"
-        Title="结果" Height="300" Width="500" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
+        Title="结果" Height="300" Width="500" WindowStartupLocation="CenterScreen" ResizeMode="CanResize">
     <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Height="250" Width="450">
-        <wfi:WindowsFormsHost HorizontalAlignment="Center" VerticalAlignment="Top" Width="450" Height="200">
-            <wf:ListView FullRowSelect="True" View="Details" x:Name="Results" Width="450" Height="200"/>
-        </wfi:WindowsFormsHost>
-        <Label x:Name="ResultOfGpa" Content="总修读学分: {GPA.TotalPoint} 已通过学分: {GPA.TotalNotFailedPoint} 不及格科目数: {GPA.Fails} 平均学分绩点: {GPA.Result:0.00}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,0,20"/>
+        <Viewbox Stretch="Uniform">
+            <Canvas Height="250" Width="450">
+                <wfi:WindowsFormsHost Width="450" Height="200" Canvas.Top="10">
+                    <wf:ListView Anchor="None" FullRowSelect="True" View="Details" x:Name="Results" Width="450" Height="200"/>
+                </wfi:WindowsFormsHost>
+                <Label x:Name="ResultOfGpa" 
+                   Content="总修读学分: {GPA.TotalPoint} 已通过学分: {GPA.TotalNotFailedPoint} 不及格科目数: {GPA.Fails} 平均学分绩点: {GPA.Result:0.00}" Margin="0,0,0,20" Canvas.Top="215"/>
+            </Canvas>
+        </Viewbox>
     </Grid>
 </Window>

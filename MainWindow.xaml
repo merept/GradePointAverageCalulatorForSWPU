@@ -9,17 +9,29 @@
         mc:Ignorable="d"
         Title="SWPU学分绩点计算器" Height="500" Width="800" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
     <Grid>
-        <wfi:WindowsFormsHost HorizontalAlignment="Center" VerticalAlignment="Top" Width="750" Height="380">
+        <wfi:WindowsFormsHost HorizontalAlignment="Left" VerticalAlignment="Top" Width="600" Height="450" Margin="10,5,0,0">
             <wf:TextBox x:Name="GradesAndPoints" BorderStyle="Fixed3D" Multiline="True" Text="" Width="750" AcceptsReturn="True" Height="380"/>
         </wfi:WindowsFormsHost>
-        
 
-        <Grid Margin="0,390,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" Width="350" Height="60">
-            <wfi:WindowsFormsHost HorizontalAlignment="Left" Height="40" VerticalAlignment="Center" Width="149">
+
+        <Grid Margin="599,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="200" Height="500">
+            <wfi:WindowsFormsHost HorizontalAlignment="Center" Height="40" VerticalAlignment="Top" Width="149" Margin="0,0,0,0">
                 <wf:Button x:Name="BeginCalculate"  Text="查看结果" Height="40" Width="150" Click="BeginCalculate_Click"/>
             </wfi:WindowsFormsHost>
-            <wfi:WindowsFormsHost HorizontalAlignment="Right" Height="40" VerticalAlignment="Center" Width="149">
+            <wfi:WindowsFormsHost HorizontalAlignment="Center" Height="40" VerticalAlignment="Top" Width="149" Margin="0,50,0,0">
                 <wf:Button x:Name="History" Text="历史记录" Height="40" Width="150" Click="History_Click"/>
+            </wfi:WindowsFormsHost>
+            <wfi:WindowsFormsHost HorizontalAlignment="Center" Height="40" VerticalAlignment="Top" Width="149" Margin="0,100,0,0">
+                <wf:Button x:Name="Backup" Text="备份记录" Height="40" Width="150" Click="Backup_Click"/>
+            </wfi:WindowsFormsHost>
+            <wfi:WindowsFormsHost HorizontalAlignment="Center" Height="40" VerticalAlignment="Top" Width="149" Margin="0,150,0,0">
+                <wf:Button x:Name="RestoreBackup" Text="恢复备份" Height="40" Width="150" Click="RestoreBackup_Click"/>
+            </wfi:WindowsFormsHost>
+            <wfi:WindowsFormsHost HorizontalAlignment="Center" Height="40" VerticalAlignment="Top" Width="149" Margin="0,200,0,0">
+                <wf:Button x:Name="CheckUpdate" Text="检查更新" Height="40" Width="150" Click="CheckUpdate_Click"/>
+            </wfi:WindowsFormsHost>
+            <wfi:WindowsFormsHost HorizontalAlignment="Center" Height="40" VerticalAlignment="Bottom" Width="149" Margin="100,0,0,40">
+                <wf:CheckBox x:Name="AutoCheck" Text="自动检查更新" Height="40" Width="150" Checked="True" AutoSize="True" CheckedChanged="AutoCheck_CheckedChanged"/>
             </wfi:WindowsFormsHost>
         </Grid>
 

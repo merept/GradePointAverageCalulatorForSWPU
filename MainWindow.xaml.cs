@@ -13,17 +13,22 @@ using MessageBoxButton = System.Windows.Forms.MessageBoxButtons;
 using MessageBoxResult = System.Windows.Forms.DialogResult;
 using System.Drawing;
 using MerelyLogTool;
-using System.Collections.Generic;
+using Microsoft.Win32;
+using System.Net;
+using System.Xml;
 
 namespace GradePointAverageCalulatorForSWPU {
     /// <summary>
     /// MainWindow.xaml 的交互逻辑
     /// </summary>
     public partial class MainWindow : Window {
-        public static string Version { get; } = "V0.5";
+        public static string Version { get; } = "V0.5.1 Beta";
+        public static string VersionConfigFile { get; } = @"\verison.xml";
+        public static bool IsAutoUpdate { get; set; }
+        public static XmlDocument Document { get; } = new XmlDocument();
         public static string HistoryFilePath { get; } = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + 
             @"\GradePointAverageCalulatorForSWPU\";
-        public static string HistoryFileName { get; } = $"\\{Environment.UserName}.gpa";
+        public static string HistoryFileName { get; } = $@"\{Environment.UserName}.gpa";
         public readonly string helpText = "欢迎来到SWPU平均学分绩点计算器!\n" +
             "\n" +
             "2022.5.27更新 version 0.5\n" +
@@ -58,14 +63,59 @@ namespace GradePointAverageCalulatorForSWPU {
             Loaded += MainWindow_Loaded;
             Closing += MainWindow_Closing; 
             InitializeComponent();
+
             BeginCalculate.Font = new Font(BeginCalculate.Font.FontFamily, 10);
             BeginCalculate.FlatStyle = System.Windows.Forms.FlatStyle.System;
             BeginCalculate.FlatAppearance.BorderColor = Color.AliceBlue;
             BeginCalculate.Focus();
+
             History.Font = new Font(History.Font.FontFamily, 10);
             History.FlatStyle = System.Windows.Forms.FlatStyle.System;
+
+            Backup.Font = new Font(Backup.Font.FontFamily, 10);
+            Backup.FlatStyle = System.Windows.Forms.FlatStyle.System;
+
+            RestoreBackup.Font = new Font(RestoreBackup.Font.FontFamily, 10);
+            RestoreBackup.FlatStyle = System.Windows.Forms.FlatStyle.System;
+
+            CheckUpdate.Font = new Font(CheckUpdate.Font.FontFamily, 10);
+            CheckUpdate.FlatStyle = System.Windows.Forms.FlatStyle.System;
+
+            AutoCheck.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            AutoCheck.Font = new Font(AutoCheck.Font.FontFamily, 10);
+
             GradesAndPoints.Font = new Font(GradesAndPoints.Font.FontFamily, 13);
+
             KeyDown += Esc_Key_Down;
+        }
+
+        private void LoadHistory() {
+            var fs = new FileStream(HistoryFilePath + HistoryFileName, FileMode.Open);
+            var formatter = new BinaryFormatter();
+            Histories = (BindingList<History>)formatter.Deserialize(fs);
+            fs.Close();
+            if (Histories.Count != 0 && !string.IsNullOrWhiteSpace(Histories.First().LastTime)) {
+                GradesAndPoints.Text = Histories.First().LastTime;
+            }
+        }
+
+        private void CreateVersionConfig() {
+            try {
+                XmlDeclaration declaration = Document.CreateXmlDeclaration("1.0", "UTF-8", "");
+                Document.AppendChild(declaration);
+                XmlElement config = Document.CreateElement("config");
+                XmlElement autoupdate = Document.CreateElement("autoupdate");
+                autoupdate.InnerText = "true";
+                XmlElement version = Document.CreateElement("version");
+                version.InnerText = Version;
+                config.AppendChild(autoupdate);
+                config.AppendChild(version);
+                Document.AppendChild(config);
+                Document.Save(HistoryFilePath + VersionConfigFile);
+            } catch (Exception ex) {
+                Log.Log(ex, "创建XML配置文件时出错");
+                Message.ShowError("创建XML配置文件时出错");
+            }
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e) {
@@ -78,13 +128,13 @@ namespace GradePointAverageCalulatorForSWPU {
                     fm.Serialize(f, Histories);
                     f.Close();
                 }
-                var fs = new FileStream(HistoryFilePath + HistoryFileName, FileMode.Open);
-                var formatter = new BinaryFormatter();
-                Histories = (BindingList<History>)formatter.Deserialize(fs);
-                fs.Close();
-                if (Histories.Count != 0 && !string.IsNullOrWhiteSpace(Histories.First().LastTime)) {
-                    GradesAndPoints.Text = Histories.First().LastTime;
-                }
+                LoadHistory();
+                if (!File.Exists(HistoryFilePath + VersionConfigFile))
+                    CreateVersionConfig();
+                Document.Load(HistoryFilePath + VersionConfigFile);
+                XmlElement root = Document.DocumentElement;
+                XmlNode isAutoUpdate = root.SelectSingleNode("autoupdate");
+                IsAutoUpdate = Convert.ToBoolean(isAutoUpdate.InnerText);
             } catch (Exception ex) {
                 Log.Log(ex, "窗口加载时出错");
                 Message.ShowError(ex.Message, ex.GetType().Name);
@@ -100,6 +150,11 @@ namespace GradePointAverageCalulatorForSWPU {
                 var formatter = new BinaryFormatter();
                 formatter.Serialize(fs, Histories);
                 fs.Close();
+                XmlElement root = Document.DocumentElement;
+                XmlNode isAutoUpdate = root.SelectSingleNode("autoupdate");
+                isAutoUpdate.InnerText = IsAutoUpdate.ToString();
+                XmlNode version = root.SelectSingleNode("version");
+                version.InnerText = Version;
             } catch (Exception ex) {
                 Log.Log(ex, "窗口关闭时出错");
                 Message.ShowError(ex.Message, ex.GetType().Name);
@@ -197,6 +252,45 @@ namespace GradePointAverageCalulatorForSWPU {
 
         private void History_Click(object sender, EventArgs e) {
             new HistoryWindow(this).ShowDialog();
+        }
+
+        private void Backup_Click(object sender, EventArgs e) {
+            var dlg = new SaveFileDialog() {
+                FileName = Environment.UserName,
+                DefaultExt = ".gpa",
+                Filter = "GPAC历史文件 | *.gpa"
+            };
+            var result = dlg.ShowDialog();
+            if (result == true) {
+                File.Copy(HistoryFilePath + HistoryFileName, dlg.FileName, true);
+                Message.ShowInformation("备份成功！", "备份记录");
+            }
+        }
+
+        private void RestoreBackup_Click(object sender, EventArgs e) {
+            var dlg = new OpenFileDialog() {
+                DefaultExt = ".gpa",
+                Filter = "GPAC历史文件 | *.gpa"
+            };
+            var result = dlg.ShowDialog();
+            if (result == true) {
+                if (Message.ShowYesNoCancelDialog("该操作将覆盖原历史记录\n是否继续？", "恢复备份") == MessageBoxResult.Yes) {
+                    File.Copy(dlg.FileName, HistoryFilePath + HistoryFileName,  true);
+                    Message.ShowInformation("恢复成功！", "恢复记录");
+                    LoadHistory();
+                }
+            }
+        }
+
+        private void CheckUpdate_Click(object sender, EventArgs e) {
+            var url = "https://gitee.com/merept/GradePointAverageCalulatorForSWPU/raw/master/README.md";
+            using (var web = new WebClient()) {
+                web.DownloadFile(url, HistoryFilePath + @"\readme.md");
+            }
+        }
+
+        private void AutoCheck_CheckedChanged(object sender, EventArgs e) {
+
         }
     }
 }
