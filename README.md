@@ -12,6 +12,12 @@
 
 ### 更新
 
+- [2022.5.28 更新 V1.0.1](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V1.0.1)
+
+> 修复了一些bug：
+>
+> 在使用Edge（目前仅测试了Edge，可能Chromium内核的浏览器都会出现此类问题）浏览器复制数据时，会出现复制的内容无法与软件设置的匹配模式匹配的情况，我已经尽量修复了大部分情况，但如果还是出现问题，***建议改用IE浏览器或者Edge浏览器的IE模式重新打开页面并复制***
+
 - [2022.5.28 更新 V1.0.0](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V1.0.0)
 
 > 全新版本的SWPU学分绩点计算器！
@@ -23,12 +29,6 @@
 > 2.现在可以直接在软件内备份和恢复历史记录了
 >
 > 3.增加软件内的检查更新功能
-
-- [2022.5.27 更新 V0.5](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V0.5)
-
-> 重大功能更新：
->
-> 现在可以直接把教务系统成绩页里的全部内容复制过来，粘贴好后直接点击 “开始计算” 即可获得结果，无需再做更改以前的方法依然可用
 
 - [更多历史版本更新内容](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases)
 

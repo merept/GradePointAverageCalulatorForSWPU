@@ -23,7 +23,7 @@ namespace GradePointAverageCalulatorForSWPU {
     /// MainWindow.xaml 的交互逻辑
     /// </summary>
     public partial class MainWindow : Window {
-        public static string Version { get; } = "V1.0.0.1";
+        public static string Version { get; } = "V1.0.1";
         public static string VersionConfigFile { get; } = @"\version.xml";
         public static bool IsAutoUpdate { get; set; }
         public static XmlDocument Document { get; } = new XmlDocument();
@@ -32,18 +32,18 @@ namespace GradePointAverageCalulatorForSWPU {
         public static string HistoryFileName { get; } = $@"\{Environment.UserName}.gpa";
         public readonly string helpText = "欢迎来到SWPU平均学分绩点计算器!\n" +
             "\n" +
+            "2022.5.28更新 version 1.0.1\n" +
+            "修复了一些bug\n" +
+            "使用Edge等Chromium内核的浏览器通过直接粘贴的方\n" +
+            "式获取结果可能会出错，建议使用IE或者Edge的IE模式\n" +
+            "进入教务系统进行复制\n" +
+            "\n" +
             "2022.5.28更新 version 1.0.0\n" +
             "全新版本的SWPU学分绩点计算器！\n" +
             "更新内容：\n" +
             "1.重新设计外观排版，以便容纳下新功能按钮\n" +
             "2.现在可以直接在软件内备份和恢复历史记录了\n" +
             "3.增加软件内的检查更新功能\n" +
-            "\n" +
-            "2022.5.27更新 version 0.5\n" +
-            "重大功能更新：\n" +
-            "现在可以直接把教务系统成绩页里的全部内容复制过来，\n" +
-            "粘贴好后直接点击 “开始计算” 即可获得结果，无需再做更改\n" +
-            "以前的方法依然可用\n" +
             "\n" +
             "请在输入框输入您每科的学分及期末成绩，\n" +
             "可直接将教务系统成绩页的全部内容粘贴进输入框，\n" +
@@ -215,6 +215,7 @@ namespace GradePointAverageCalulatorForSWPU {
 
         private void ShowResult(string[] datas, int count) {
             var gpa = new GradePointAverage();
+            count = count == 6 ? 7 : count;
             int gradeIndex = count == 7 ? 6 : 9, 
                 pointIndex = 4, 
                 nameIndex = 2;
@@ -237,22 +238,46 @@ namespace GradePointAverageCalulatorForSWPU {
             } else return;
         }
 
-        private bool IsJustCopy(out int l) {
-            var s = GradesAndPoints.Text.Split('\n');
-            l = Regex.Split(s[0], @"\u0020\u0020+").Length - 1;
-            l = l == 6 ? 7 : l;
-            return l == 7 || l == 11 || l == 12;
+        private bool IsJustCopy() {
+            var str = GradesAndPoints.Text.Substring(0, 10);
+            if (Regex.IsMatch(str, @"\d{10}")) {
+                return true;
+            } else return false;
         }
 
         private void BeginCalculate_Click(object sender, EventArgs e) {
-            int count;
             if (string.IsNullOrWhiteSpace(GradesAndPoints.Text)) {
                 MessageBox.Show("请输入内容!", "警告", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-            if (IsJustCopy(out count)) {
-                var s = Regex.Replace(Regex.Replace(GradesAndPoints.Text, @"\r\n+", ""), @"\u0020\u0020\u0020\u0020+", "\u0020\u0020");
-                ShowResult(Regex.Split(s, @"\u0020\u0020+"), count);
+            if (IsJustCopy()) {
+                var s = Regex.Replace(GradesAndPoints.Text, @"\r\n+", "");
+                s = Regex.Replace(s, @"\u0020\u0020\u0020\u0020+", "\u0020\u0020");
+                s = Regex.Replace(s, @"成绩明细+", "");
+                var strs = Regex.Split(s, @"\u0020\u0020+");
+                var count = 0;
+                for (int i = 0; i < strs.Length; i++, count++) {
+                    if (Regex.IsMatch(strs[i], @"\d{10}") && i != 0) break;
+                }
+                if (count <= 1) {
+                    strs = Regex.Split(s, @"	+");
+                    var listT = strs.ToList();
+                    count = 0;
+                    for (int i = 0; i < listT.Count; i++) {
+                        if (Regex.IsMatch(listT[i], @"\d{2}.\d\u0020\d{10}")) {
+                            var str = Regex.Split(listT[i], @"\u0020");
+                            listT[i] = str[0];
+                            listT.Insert(i + 1, str[1]);
+                        }
+                    }
+                    for (int i = 0; i < listT.Count; i++, count++)
+                        if (Regex.IsMatch(listT[i], @"\d{10}") && i != 0) break;
+                    Message.ShowInformation(count.ToString(), "");
+                    ShowResult(listT.ToArray(), count);
+                } else {
+                    ShowResult(Regex.Split(s, @"\u0020\u0020+"), count);
+                }
+                
             } else {
                 var dataMatches = Regex.Matches(GradesAndPoints.Text, @"\d+\.*\d*");
                 var nameMatches = Regex.Matches(GradesAndPoints.Text, @"[a-zA-z\u4e00-\u9fa5]+");
