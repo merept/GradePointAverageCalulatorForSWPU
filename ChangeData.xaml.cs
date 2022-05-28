@@ -52,7 +52,7 @@ namespace GradePointAverageCalulatorForSWPU {
                 if (!string.IsNullOrEmpty(Point.Text))
                     point = Convert.ToDouble(Point.Text);
             } catch (FormatException ex) {
-                MainWindow.Log.Log(ex, "输入了错误的数值");
+                //MainWindow.Log.Log(ex, "输入了错误的数值");
                 Message.ShowError("请输入正确的数值");
                 return;
             }

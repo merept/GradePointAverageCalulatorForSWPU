@@ -12,7 +12,7 @@ using MessageBoxImage = System.Windows.Forms.MessageBoxIcon;
 using MessageBoxButton = System.Windows.Forms.MessageBoxButtons;
 using MessageBoxResult = System.Windows.Forms.DialogResult;
 using System.Drawing;
-using MerelyLogTool;
+//using MerelyLogTool;
 using Microsoft.Win32;
 using System.Net;
 using System.Xml;
@@ -23,7 +23,7 @@ namespace GradePointAverageCalulatorForSWPU {
     /// MainWindow.xaml 的交互逻辑
     /// </summary>
     public partial class MainWindow : Window {
-        public static string Version { get; } = "V1.0.1";
+        public static string Version { get; } = "V1.0.1.1";
         public static string VersionConfigFile { get; } = @"\version.xml";
         public static bool IsAutoUpdate { get; set; }
         public static XmlDocument Document { get; } = new XmlDocument();
@@ -58,7 +58,7 @@ namespace GradePointAverageCalulatorForSWPU {
             //"电路 5 73\n" +
             //"C语言 3.5 81\n";
         public BindingList<History> Histories { get; set; } = new BindingList<History>();
-        public static MerelyLog Log { get; } = new MerelyLog(HistoryFilePath, "GPAC_log", Version, LogMode.XML);
+        //public static MerelyLog Log { get; } = new MerelyLog(HistoryFilePath, "GPAC_log", Version, LogMode.XML);
 
 
         public MainWindow() {
@@ -118,7 +118,7 @@ namespace GradePointAverageCalulatorForSWPU {
                 Document.AppendChild(config);
                 Document.Save(HistoryFilePath + VersionConfigFile);
             } catch (Exception ex) {
-                Log.Log(ex, "创建XML配置文件时出错");
+                //Log.Log(ex, "创建XML配置文件时出错");
                 Message.ShowError("创建XML配置文件时出错");
             }
         }
@@ -148,7 +148,7 @@ namespace GradePointAverageCalulatorForSWPU {
                     Update(true);
                 }
             } catch (Exception ex) {
-                Log.Log(ex, "窗口加载时出错");
+                //Log.Log(ex, "窗口加载时出错");
                 Message.ShowError(ex.Message, ex.GetType().Name);
             }
         }
@@ -169,7 +169,7 @@ namespace GradePointAverageCalulatorForSWPU {
                 version.InnerText = Version;
                 Document.Save(HistoryFilePath + VersionConfigFile);
             } catch (Exception ex) {
-                Log.Log(ex, "窗口关闭时出错");
+                //Log.Log(ex, "窗口关闭时出错");
                 Message.ShowError(ex.Message, ex.GetType().Name);
             }
         }
@@ -227,7 +227,7 @@ namespace GradePointAverageCalulatorForSWPU {
                     gpa.Add(datas[i + nameIndex], Convert.ToDouble(datas[i + pointIndex]), Convert.ToDouble(datas[i + gradeIndex]));
                 }
             } catch (Exception ex) {
-                Log.Log(ex, "计算结果时出错");
+                //Log.Log(ex, "计算结果时出错");
                 Message.ShowError(ex.Message, ex.GetType().Name);
             }
             var history = new History(gpa);
@@ -343,7 +343,7 @@ namespace GradePointAverageCalulatorForSWPU {
                         File.Delete(updateExePath);
                 }
             } catch (Exception ex) {
-                Log.Log(ex, "检查更新时出错");
+                //Log.Log(ex, "检查更新时出错");
                 Message.ShowError(ex.Message);
             }
         }
