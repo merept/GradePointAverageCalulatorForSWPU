@@ -23,7 +23,7 @@ namespace GradePointAverageCalulatorForSWPU {
     /// MainWindow.xaml 的交互逻辑
     /// </summary>
     public partial class MainWindow : Window {
-        public static string Version { get; } = "V1.0.0";
+        public static string Version { get; } = "V1.0.0.1";
         public static string VersionConfigFile { get; } = @"\version.xml";
         public static bool IsAutoUpdate { get; set; }
         public static XmlDocument Document { get; } = new XmlDocument();
@@ -222,7 +222,7 @@ namespace GradePointAverageCalulatorForSWPU {
                 for (int i = 0; i < datas.Length - 1; i += count) {
                     if (Regex.IsMatch(datas[i + nameIndex], @"英语实践+") || 
                         Regex.IsMatch(datas[i + nameIndex], @"全国英语+") || 
-                        datas[i].Substring(0, 2) == "00") continue;
+                        datas[i].Substring(0, 1) == "0") continue;
                     gpa.Add(datas[i + nameIndex], Convert.ToDouble(datas[i + pointIndex]), Convert.ToDouble(datas[i + gradeIndex]));
                 }
             } catch (Exception ex) {
