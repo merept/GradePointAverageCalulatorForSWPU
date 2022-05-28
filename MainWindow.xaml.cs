@@ -16,14 +16,15 @@ using MerelyLogTool;
 using Microsoft.Win32;
 using System.Net;
 using System.Xml;
+using System.Diagnostics;
 
 namespace GradePointAverageCalulatorForSWPU {
     /// <summary>
     /// MainWindow.xaml 的交互逻辑
     /// </summary>
     public partial class MainWindow : Window {
-        public static string Version { get; } = "V0.5.1 Beta";
-        public static string VersionConfigFile { get; } = @"\verison.xml";
+        public static string Version { get; } = "V1.0.0";
+        public static string VersionConfigFile { get; } = @"\version.xml";
         public static bool IsAutoUpdate { get; set; }
         public static XmlDocument Document { get; } = new XmlDocument();
         public static string HistoryFilePath { get; } = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + 
@@ -31,18 +32,22 @@ namespace GradePointAverageCalulatorForSWPU {
         public static string HistoryFileName { get; } = $@"\{Environment.UserName}.gpa";
         public readonly string helpText = "欢迎来到SWPU平均学分绩点计算器!\n" +
             "\n" +
+            "2022.5.28更新 version 1.0.0\n" +
+            "全新版本的SWPU学分绩点计算器！\n" +
+            "更新内容：\n" +
+            "1.重新设计外观排版，以便容纳下新功能按钮\n" +
+            "2.现在可以直接在软件内备份和恢复历史记录了\n" +
+            "3.增加软件内的检查更新功能\n" +
+            "\n" +
             "2022.5.27更新 version 0.5\n" +
             "重大功能更新：\n" +
             "现在可以直接把教务系统成绩页里的全部内容复制过来，\n" +
             "粘贴好后直接点击 “开始计算” 即可获得结果，无需再做更改\n" +
             "以前的方法依然可用\n" +
             "\n" +
-            "2022.5.7更新 version 0.4.4\n" +
-            "1.新增了异常日志记录（使用 MereyLog 进行记录）\n" +
-            "\n" +
             "请在输入框输入您每科的学分及期末成绩，\n" +
             "可直接将教务系统成绩页的全部内容粘贴进输入框，\n" +
-            "然后点击输入框下方 ”开始计算“ 按钮进行计算\n";
+            "然后点击输入框右方 ”查看结果“ 按钮查看您的绩点结果\n";
             //"输入时请严格遵守一下几点:\n" +
             //"1.以先输入学分再输入成绩的顺序，否侧结果可能会出错\n" +
             //"2.每个数据之间需用任何除数字和小数点外的符号进行间隔\n" +
@@ -134,7 +139,14 @@ namespace GradePointAverageCalulatorForSWPU {
                 Document.Load(HistoryFilePath + VersionConfigFile);
                 XmlElement root = Document.DocumentElement;
                 XmlNode isAutoUpdate = root.SelectSingleNode("autoupdate");
-                IsAutoUpdate = Convert.ToBoolean(isAutoUpdate.InnerText);
+                AutoCheck.Checked = Convert.ToBoolean(isAutoUpdate.InnerText);
+                if (IsAutoUpdate) {
+                    var url = "https://gitee.com/merept/GradePointAverageCalulatorForSWPU/raw/master/update.xml";
+                    using (var web = new WebClient()) {
+                        web.DownloadFile(url, HistoryFilePath + @"\update.xml");
+                    }
+                    Update(true);
+                }
             } catch (Exception ex) {
                 Log.Log(ex, "窗口加载时出错");
                 Message.ShowError(ex.Message, ex.GetType().Name);
@@ -155,6 +167,7 @@ namespace GradePointAverageCalulatorForSWPU {
                 isAutoUpdate.InnerText = IsAutoUpdate.ToString();
                 XmlNode version = root.SelectSingleNode("version");
                 version.InnerText = Version;
+                Document.Save(HistoryFilePath + VersionConfigFile);
             } catch (Exception ex) {
                 Log.Log(ex, "窗口关闭时出错");
                 Message.ShowError(ex.Message, ex.GetType().Name);
@@ -226,7 +239,6 @@ namespace GradePointAverageCalulatorForSWPU {
 
         private bool IsJustCopy(out int l) {
             var s = GradesAndPoints.Text.Split('\n');
-            var a = s[0];
             l = Regex.Split(s[0], @"\u0020\u0020+").Length - 1;
             l = l == 6 ? 7 : l;
             return l == 7 || l == 11 || l == 12;
@@ -282,15 +294,50 @@ namespace GradePointAverageCalulatorForSWPU {
             }
         }
 
-        private void CheckUpdate_Click(object sender, EventArgs e) {
-            var url = "https://gitee.com/merept/GradePointAverageCalulatorForSWPU/raw/master/README.md";
-            using (var web = new WebClient()) {
-                web.DownloadFile(url, HistoryFilePath + @"\readme.md");
+        private void Update(bool isAuto) {
+            try {
+                var updateConfigPath = HistoryFilePath + @"\update.xml";
+                var updateExePath = HistoryFilePath + @"\update.exe";
+                var updateXml = new XmlDocument();
+                updateXml.Load(updateConfigPath);
+                XmlElement root = updateXml.DocumentElement;
+                XmlNode version = root.SelectSingleNode("version");
+                if (Version != version.InnerText) {
+                    if (Message.ShowYesNoCancelDialog("检测到新版本是否更新？", "应用更新") == MessageBoxResult.Yes) {
+                        XmlNode download = root.SelectSingleNode("download");
+                        using (var web = new WebClient()) {
+                            var s = download.InnerText;
+                            web.DownloadFile(download.InnerText, updateExePath);
+                        }
+                        InstallUpdate(updateExePath);
+                    }
+                } else {
+                    if (!isAuto)
+                        Message.ShowInformation("当前已为最新版本！", "应用更新");
+                    if (File.Exists(updateExePath))
+                        File.Delete(updateExePath);
+                }
+            } catch (Exception ex) {
+                Log.Log(ex, "检查更新时出错");
+                Message.ShowError(ex.Message);
             }
         }
 
-        private void AutoCheck_CheckedChanged(object sender, EventArgs e) {
+        private void InstallUpdate(string path) {
+            Process.Start(path);
+            Environment.Exit(0);
+        }
 
+        private void CheckUpdate_Click(object sender, EventArgs e) {
+            var url = "https://gitee.com/merept/GradePointAverageCalulatorForSWPU/raw/master/update.xml";
+            using (var web = new WebClient()) {
+                web.DownloadFile(url, HistoryFilePath + @"\update.xml");
+            }
+            Update(false);
+        }
+
+        private void AutoCheck_CheckedChanged(object sender, EventArgs e) {
+            IsAutoUpdate = AutoCheck.Checked;
         }
     }
 }
