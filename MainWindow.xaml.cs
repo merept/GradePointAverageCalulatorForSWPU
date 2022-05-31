@@ -147,6 +147,9 @@ namespace GradePointAverageCalulatorForSWPU {
                     }
                     Update(true);
                 }
+            } catch (WebException ex) {
+                if (!Regex.IsMatch(ex.Message, @"未能解析此远程名称+"))
+                    Message.ShowError(ex.Message, ex.GetType().Name);
             } catch (Exception ex) {
                 //Log.Log(ex, "窗口加载时出错");
                 Message.ShowError(ex.Message, ex.GetType().Name);
@@ -342,6 +345,10 @@ namespace GradePointAverageCalulatorForSWPU {
                     if (File.Exists(updateExePath))
                         File.Delete(updateExePath);
                 }
+            } catch (WebException ex) {
+                if (Regex.IsMatch(ex.Message, @"未能解析此远程名称+")) {
+                    Message.ShowWarning("网络连接错误，请检查网络配置。", "更新失败");
+                }
             } catch (Exception ex) {
                 //Log.Log(ex, "检查更新时出错");
                 Message.ShowError(ex.Message);
@@ -354,11 +361,20 @@ namespace GradePointAverageCalulatorForSWPU {
         }
 
         private void CheckUpdate_Click(object sender, EventArgs e) {
-            var url = "https://gitee.com/merept/GradePointAverageCalulatorForSWPU/raw/master/update.xml";
-            using (var web = new WebClient()) {
-                web.DownloadFile(url, HistoryFilePath + @"\update.xml");
+            try {
+                var url = "https://gitee.com/merept/GradePointAverageCalulatorForSWPU/raw/master/update.xml";
+                using (var web = new WebClient()) {
+                    web.DownloadFile(url, HistoryFilePath + @"\update.xml");
+                }
+                Update(false);
+            } catch (WebException ex) {
+                if (Regex.IsMatch(ex.Message, @"未能解析此远程名称+")) {
+                    Message.ShowWarning("网络连接错误，请检查网络配置。", "更新失败");
+                }
+            } catch (Exception ex) {
+                //Log.Log(ex, "检查更新时出错");
+                Message.ShowError(ex.Message);
             }
-            Update(false);
         }
 
         private void AutoCheck_CheckedChanged(object sender, EventArgs e) {
