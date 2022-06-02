@@ -12,6 +12,10 @@
 
 ### 更新
 
+- [2022.6.2 更新 V1.0.2](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V1.0.2)
+
+> 增加检查/下载更新进度提示
+
 - [2022.5.28 更新 V1.0.1](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V1.0.1)
 
 > 修复了一些bug：

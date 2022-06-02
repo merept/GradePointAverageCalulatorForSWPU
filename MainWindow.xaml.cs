@@ -23,14 +23,17 @@ namespace GradePointAverageCalulatorForSWPU {
     /// MainWindow.xaml 的交互逻辑
     /// </summary>
     public partial class MainWindow : Window {
-        public static string Version { get; } = "V1.0.1.1";
+        public static string Version { get; } = Application.ResourceAssembly.GetName().Version.ToString();
         public static string VersionConfigFile { get; } = @"\version.xml";
         public static bool IsAutoUpdate { get; set; }
         public static XmlDocument Document { get; } = new XmlDocument();
         public static string HistoryFilePath { get; } = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + 
-            @"\GradePointAverageCalulatorForSWPU\";
+            @"\GradePointAverageCalulatorForSWPU";
         public static string HistoryFileName { get; } = $@"\{Environment.UserName}.gpa";
         public readonly string helpText = "欢迎来到SWPU平均学分绩点计算器!\n" +
+            "\n" +
+            "2022.6.2更新 version 1.0.2\n" +
+            "增加检查/下载更新进度提示\n" +
             "\n" +
             "2022.5.28更新 version 1.0.1\n" +
             "修复了一些bug\n" +
@@ -86,6 +89,11 @@ namespace GradePointAverageCalulatorForSWPU {
             CheckUpdate.Font = new Font(CheckUpdate.Font.FontFamily, 10);
             CheckUpdate.FlatStyle = System.Windows.Forms.FlatStyle.System;
 
+            UpdateProcess.Font = new Font(UpdateProcess.Font.FontFamily, 10);
+            UpdateProcess.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            UpdateProcess.TextAlign = ContentAlignment.TopCenter;
+            UpdateProcess.Text = "";
+
             AutoCheck.FlatStyle = System.Windows.Forms.FlatStyle.System;
             AutoCheck.Font = new Font(AutoCheck.Font.FontFamily, 10);
 
@@ -117,7 +125,7 @@ namespace GradePointAverageCalulatorForSWPU {
                 config.AppendChild(version);
                 Document.AppendChild(config);
                 Document.Save(HistoryFilePath + VersionConfigFile);
-            } catch (Exception ex) {
+            } catch (Exception) {
                 //Log.Log(ex, "创建XML配置文件时出错");
                 Message.ShowError("创建XML配置文件时出错");
             }
@@ -331,13 +339,15 @@ namespace GradePointAverageCalulatorForSWPU {
                 XmlElement root = updateXml.DocumentElement;
                 XmlNode version = root.SelectSingleNode("version");
                 if (Version != version.InnerText) {
-                    if (Message.ShowYesNoCancelDialog("检测到新版本是否更新？", "应用更新") == MessageBoxResult.Yes) {
+                    if (Message.ShowYesNoDialog("检测到新版本是否更新？", "应用更新") == MessageBoxResult.Yes) {
                         XmlNode download = root.SelectSingleNode("download");
                         using (var web = new WebClient()) {
+                            CheckUpdate.Enabled = false;
+                            web.DownloadProgressChanged += Update_DownloadProgressChanged;
+                            web.DownloadFileCompleted += Update_DownloadFileCompleted;
                             var s = download.InnerText;
-                            web.DownloadFile(download.InnerText, updateExePath);
+                            web.DownloadFileAsync(new Uri(download.InnerText), updateExePath);
                         }
-                        InstallUpdate(updateExePath);
                     }
                 } else {
                     if (!isAuto)
@@ -355,6 +365,16 @@ namespace GradePointAverageCalulatorForSWPU {
             }
         }
 
+        private void Update_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e) {
+            CheckUpdate.Enabled = true;
+            UpdateProcess.Text = "";
+            InstallUpdate(HistoryFilePath + @"\update.exe");
+        }
+
+        private void Update_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e) {
+            UpdateProcess.Text = $"下载更新中... {e.ProgressPercentage:0} %";
+        }
+
         private void InstallUpdate(string path) {
             Process.Start(path);
             Environment.Exit(0);
@@ -364,9 +384,10 @@ namespace GradePointAverageCalulatorForSWPU {
             try {
                 var url = "https://gitee.com/merept/GradePointAverageCalulatorForSWPU/raw/master/update.xml";
                 using (var web = new WebClient()) {
-                    web.DownloadFile(url, HistoryFilePath + @"\update.xml");
+                    web.DownloadProgressChanged += CheckUpdate_DownloadProgressChanged;
+                    web.DownloadFileCompleted += CheckUpdate_DownloadFileCompleted;
+                    web.DownloadFileAsync(new Uri(url), HistoryFilePath + @"\update.xml");
                 }
-                Update(false);
             } catch (WebException ex) {
                 if (Regex.IsMatch(ex.Message, @"未能解析此远程名称+")) {
                     Message.ShowWarning("网络连接错误，请检查网络配置。", "更新失败");
@@ -375,6 +396,15 @@ namespace GradePointAverageCalulatorForSWPU {
                 //Log.Log(ex, "检查更新时出错");
                 Message.ShowError(ex.Message);
             }
+        }
+
+        private void CheckUpdate_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e) {
+            UpdateProcess.Text = "";
+            Update(false);
+        }
+
+        private void CheckUpdate_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e) {
+            UpdateProcess.Text = $"检查更新中... {e.ProgressPercentage:0} %";
         }
 
         private void AutoCheck_CheckedChanged(object sender, EventArgs e) {
