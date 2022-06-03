@@ -12,15 +12,15 @@
 
 ### 更新
 
+- [2022.6.4 更新 V1.0.3](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V1.0.3)
+
+> 1.现在可以直接通过历史记录文件打开程序并查看，并且在打开的文件中所作的修改不会影响到原本的历史记录
+>
+> 2.现在检查更新成功后可以查看新版本更新内容
+
 - [2022.6.2 更新 V1.0.2](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V1.0.2)
 
 > 增加检查/下载更新进度提示
-
-- [2022.5.28 更新 V1.0.1](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V1.0.1)
-
-> 修复了一些bug：
->
-> 在使用Edge（目前仅测试了Edge，可能Chromium内核的浏览器都会出现此类问题）浏览器复制数据时，会出现复制的内容无法与软件设置的匹配模式匹配的情况，我已经尽量修复了大部分情况，但如果还是出现问题，***建议改用IE浏览器或者Edge浏览器的IE模式重新打开页面并复制***
 
 - [2022.5.28 更新 V1.0.0](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V1.0.0)
 

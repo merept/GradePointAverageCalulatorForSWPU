@@ -17,6 +17,8 @@ using Microsoft.Win32;
 using System.Net;
 using System.Xml;
 using System.Diagnostics;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace GradePointAverageCalulatorForSWPU {
     /// <summary>
@@ -29,17 +31,16 @@ namespace GradePointAverageCalulatorForSWPU {
         public static XmlDocument Document { get; } = new XmlDocument();
         public static string HistoryFilePath { get; } = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + 
             @"\GradePointAverageCalulatorForSWPU";
-        public static string HistoryFileName { get; } = $@"\{Environment.UserName}.gpa";
+        public static string HistoryFileName { get; set; } = $@"{HistoryFilePath}\{Environment.UserName}.gpa";
         public readonly string helpText = "欢迎来到SWPU平均学分绩点计算器!\n" +
+            "\n" +
+            "2022.6.4更新 version 1.0.3\n" +
+            "1.现在可以直接通过历史记录文件打开程序并查看，并且\n" +
+            "在打开的文件中所作的修改不会影响到原本的历史记录\n" +
+            "2.现在检查更新成功后可以查看新版本更新内容\n" +
             "\n" +
             "2022.6.2更新 version 1.0.2\n" +
             "增加检查/下载更新进度提示\n" +
-            "\n" +
-            "2022.5.28更新 version 1.0.1\n" +
-            "修复了一些bug\n" +
-            "使用Edge等Chromium内核的浏览器通过直接粘贴的方\n" +
-            "式获取结果可能会出错，建议使用IE或者Edge的IE模式\n" +
-            "进入教务系统进行复制\n" +
             "\n" +
             "2022.5.28更新 version 1.0.0\n" +
             "全新版本的SWPU学分绩点计算器！\n" +
@@ -103,7 +104,7 @@ namespace GradePointAverageCalulatorForSWPU {
         }
 
         private void LoadHistory() {
-            var fs = new FileStream(HistoryFilePath + HistoryFileName, FileMode.Open);
+            var fs = new FileStream(HistoryFileName, FileMode.Open);
             var formatter = new BinaryFormatter();
             Histories = (BindingList<History>)formatter.Deserialize(fs);
             fs.Close();
@@ -135,8 +136,11 @@ namespace GradePointAverageCalulatorForSWPU {
             try {
                 if (!Directory.Exists(HistoryFilePath))
                     Directory.CreateDirectory(HistoryFilePath);
-                if (!File.Exists(HistoryFilePath + HistoryFileName)) {
-                    var f = new FileStream(HistoryFilePath + HistoryFileName, FileMode.Create);
+                var args = Environment.GetCommandLineArgs();
+                if (args.Length > 1)
+                    HistoryFileName = args[1];
+                if (!File.Exists(HistoryFileName)) {
+                    var f = new FileStream(HistoryFileName, FileMode.Create);
                     var fm = new BinaryFormatter();
                     fm.Serialize(f, Histories);
                     f.Close();
@@ -148,6 +152,9 @@ namespace GradePointAverageCalulatorForSWPU {
                 XmlElement root = Document.DocumentElement;
                 XmlNode isAutoUpdate = root.SelectSingleNode("autoupdate");
                 AutoCheck.Checked = Convert.ToBoolean(isAutoUpdate.InnerText);
+                //var str = root.SelectSingleNode("updateinfo").InnerText;
+                //str = str.Replace("\\n", Environment.NewLine);
+                //Message.ShowInformation($"检测到新版本是否更新？\n\n最新版本：V{Version}\n\n{str}", "test");
                 if (IsAutoUpdate) {
                     var url = "https://gitee.com/merept/GradePointAverageCalulatorForSWPU/raw/master/update.xml";
                     using (var web = new WebClient()) {
@@ -169,7 +176,7 @@ namespace GradePointAverageCalulatorForSWPU {
                 if (Histories.Count != 0) {
                     Histories.First().LastTime = GradesAndPoints.Text;
                 }
-                var fs = new FileStream(HistoryFilePath + HistoryFileName, FileMode.OpenOrCreate, FileAccess.Write);
+                var fs = new FileStream(HistoryFileName, FileMode.OpenOrCreate, FileAccess.Write);
                 var formatter = new BinaryFormatter();
                 formatter.Serialize(fs, Histories);
                 fs.Close();
@@ -310,7 +317,14 @@ namespace GradePointAverageCalulatorForSWPU {
             };
             var result = dlg.ShowDialog();
             if (result == true) {
-                File.Copy(HistoryFilePath + HistoryFileName, dlg.FileName, true);
+                if (Histories.Count != 0) {
+                    Histories.First().LastTime = GradesAndPoints.Text;
+                }
+                var fs = new FileStream(HistoryFileName, FileMode.OpenOrCreate, FileAccess.Write);
+                var formatter = new BinaryFormatter();
+                formatter.Serialize(fs, Histories);
+                fs.Close();
+                File.Copy(HistoryFileName, dlg.FileName, true);
                 Message.ShowInformation("备份成功！", "备份记录");
             }
         }
@@ -323,7 +337,7 @@ namespace GradePointAverageCalulatorForSWPU {
             var result = dlg.ShowDialog();
             if (result == true) {
                 if (Message.ShowYesNoCancelDialog("该操作将覆盖原历史记录\n是否继续？", "恢复备份") == MessageBoxResult.Yes) {
-                    File.Copy(dlg.FileName, HistoryFilePath + HistoryFileName,  true);
+                    File.Copy(dlg.FileName, HistoryFileName,  true);
                     Message.ShowInformation("恢复成功！", "恢复记录");
                     LoadHistory();
                 }
@@ -339,7 +353,10 @@ namespace GradePointAverageCalulatorForSWPU {
                 XmlElement root = updateXml.DocumentElement;
                 XmlNode version = root.SelectSingleNode("version");
                 if (Version != version.InnerText) {
-                    if (Message.ShowYesNoDialog("检测到新版本是否更新？", "应用更新") == MessageBoxResult.Yes) {
+                    var updateInfo = root.SelectSingleNode("updateinfo")
+                                            .InnerText
+                                            .Replace("\\n", Environment.NewLine);
+                    if (Message.ShowYesNoDialog($"检测到新版本是否更新？\n\n{version.InnerText}\n\n{updateInfo}", "应用更新") == MessageBoxResult.Yes) {
                         XmlNode download = root.SelectSingleNode("download");
                         using (var web = new WebClient()) {
                             CheckUpdate.Enabled = false;
@@ -366,9 +383,16 @@ namespace GradePointAverageCalulatorForSWPU {
         }
 
         private void Update_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e) {
-            CheckUpdate.Enabled = true;
-            UpdateProcess.Text = "";
-            InstallUpdate(HistoryFilePath + @"\update.exe");
+            if (e.Error != null) {
+                if (Regex.IsMatch(e.Error.Message, @"未能解析此远程名称+")) {
+                    UpdateProcess.Text = "网络连接错误\n请检查网络配置。";
+                    Sleep10Sec();
+                }
+            } else {
+                CheckUpdate.Enabled = true;
+                UpdateProcess.Text = "";
+                InstallUpdate(HistoryFilePath + @"\update.exe");
+            }
         }
 
         private void Update_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e) {
@@ -388,10 +412,6 @@ namespace GradePointAverageCalulatorForSWPU {
                     web.DownloadFileCompleted += CheckUpdate_DownloadFileCompleted;
                     web.DownloadFileAsync(new Uri(url), HistoryFilePath + @"\update.xml");
                 }
-            } catch (WebException ex) {
-                if (Regex.IsMatch(ex.Message, @"未能解析此远程名称+")) {
-                    Message.ShowWarning("网络连接错误，请检查网络配置。", "更新失败");
-                }
             } catch (Exception ex) {
                 //Log.Log(ex, "检查更新时出错");
                 Message.ShowError(ex.Message);
@@ -399,8 +419,23 @@ namespace GradePointAverageCalulatorForSWPU {
         }
 
         private void CheckUpdate_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e) {
-            UpdateProcess.Text = "";
-            Update(false);
+            if (e.Error != null) {
+                if (Regex.IsMatch(e.Error.Message, @"未能解析此远程名称+")) {
+                    UpdateProcess.Text = "网络连接错误\n  请检查网络配置。";
+                    Sleep10Sec();
+                }
+            } else {
+                UpdateProcess.Text = "";
+                Update(false);
+            }
+        }
+
+        private async void Sleep10Sec() {
+            await Task.Run(() => {
+                    Thread.Sleep(10000);
+                    UpdateProcess.Text = "";
+                }
+            );
         }
 
         private void CheckUpdate_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e) {
