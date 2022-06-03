@@ -356,7 +356,7 @@ namespace GradePointAverageCalulatorForSWPU {
                     var updateInfo = root.SelectSingleNode("updateinfo")
                                             .InnerText
                                             .Replace("\\n", Environment.NewLine);
-                    if (Message.ShowYesNoDialog($"检测到新版本是否更新？\n\n{version.InnerText}\n\n{updateInfo}", "应用更新") == MessageBoxResult.Yes) {
+                    if (Message.ShowYesNoDialog($"检测到新版本是否更新？\n\n最新版本：V{version.InnerText}\n\n{updateInfo}", "应用更新") == MessageBoxResult.Yes) {
                         XmlNode download = root.SelectSingleNode("download");
                         using (var web = new WebClient()) {
                             CheckUpdate.Enabled = false;
@@ -421,6 +421,7 @@ namespace GradePointAverageCalulatorForSWPU {
         private void CheckUpdate_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e) {
             if (e.Error != null) {
                 if (Regex.IsMatch(e.Error.Message, @"未能解析此远程名称+")) {
+                    UpdateProcess.ForeColor = Color.Red;
                     UpdateProcess.Text = "网络连接错误\n  请检查网络配置。";
                     Sleep10Sec();
                 }
@@ -433,6 +434,7 @@ namespace GradePointAverageCalulatorForSWPU {
         private async void Sleep10Sec() {
             await Task.Run(() => {
                     Thread.Sleep(10000);
+                    UpdateProcess.ForeColor = Color.Black;
                     UpdateProcess.Text = "";
                 }
             );
