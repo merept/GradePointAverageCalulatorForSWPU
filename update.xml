@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <config>
-  <version>1.0.3.0</version>
-  <download>https://gitee.com/merept/GradePointAverageCalulatorForSWPU/attach_files/1084135/download/GPAC%20Setup.exe</download>
-  <updateinfo>1.现在可以直接通过历史记录文件打开程序并查看，并且\n在打开的文件中所作的修改不会影响到原本的历史记录\n\n2.现在检查更新成功后可以查看新版本更新内容</updateinfo>
+  <version>1.0.3.613</version>
+  <download>https://gitee.com/merept/GradePointAverageCalulatorForSWPU/attach_files/1093994/download/GPAC%20Setup.exe</download>
+  <updateinfo>增加下载更新完成提示，已经下载好的安装包不会重新下载</updateinfo>
 </config>
