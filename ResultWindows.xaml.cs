@@ -17,17 +17,24 @@ namespace GradePointAverageCalulatorForSWPU {
 
         public ResultWindows(GradePointAverage GPA, BindingList<History> histories, int index) {
             InitializeComponent();
+
             Results.Columns.Add("", 0, System.Windows.Forms.HorizontalAlignment.Center);
             Results.Columns.Add("学分", 240, System.Windows.Forms.HorizontalAlignment.Center);
             Results.Columns.Add("成绩", 240, System.Windows.Forms.HorizontalAlignment.Center);
+
             KeyDown += Esc_Key_Down;
+
             GradePointAverage = GPA;
             Histories = histories;
             Index = index;
+
             SetListView();
+
             var change = new ToolStripMenuItem("修改");
             change.Click += MenuItem_Click;
+
             MenuStrip.Items.Add(change);
+
             Results.MouseClick += Results_MouseClick;
             ResultOfGpa.Content = $"总修读学分: {GradePointAverage.TotalPoint} " +
                 $"已通过学分: {GradePointAverage.TotalNotFailedPoint} " +
@@ -62,7 +69,7 @@ namespace GradePointAverageCalulatorForSWPU {
             var index = Results.SelectedItems[0].Index;
             if (index < 0)
                 return;
-            new ChangeData(index, Histories[Index], GradePointAverage.GradesAndPoints, GradePointAverage).ShowDialog();
+            new ChangeData(index, Histories[Index], GradePointAverage).ShowDialog();
             SetListView();
             ResultOfGpa.Content = $"总修读学分: {GradePointAverage.TotalPoint} " +
                 $"已通过学分: {GradePointAverage.TotalNotFailedPoint} " +

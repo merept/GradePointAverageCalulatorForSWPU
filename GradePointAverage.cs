@@ -25,8 +25,8 @@ namespace GradePointAverageCalulatorForSWPU {
 
         private void AddIn(double point, double grade) {
             var gradePoint = 0.0;
-            if (grade >= 60) {
-                gradePoint = (grade - 60) / 10 + 1;
+            if (grade >= 60) { //判断是否挂科
+                gradePoint = (grade - 60) / 10 + 1; //计算单科学分绩点
                 TotalNotFailedPoint += point;
             } else Fails++;
             TotalPoint += point;

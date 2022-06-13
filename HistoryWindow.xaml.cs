@@ -18,22 +18,31 @@ namespace GradePointAverageCalulatorForSWPU {
 
         public HistoryWindow(MainWindow main) {
             InitializeComponent();
+
             Historys.Columns.Add("", 0, System.Windows.Forms.HorizontalAlignment.Center);
             Historys.Columns.Add("名称", 200, System.Windows.Forms.HorizontalAlignment.Center);
             Historys.Columns.Add("修改时间", 360, System.Windows.Forms.HorizontalAlignment.Center);
+
             Clear.Font = new Font(Clear.Font.FontFamily, 8);
             Clear.FlatStyle = FlatStyle.System;
             Clear.FlatAppearance.BorderColor = Color.AliceBlue;
+
             KeyDown += Esc_Key_Down;
+
             Main = main;
+
             var delete = new ToolStripMenuItem("删除");
             delete.Click += Delete_Click;
             var rename = new ToolStripMenuItem("重命名");
             rename.Click += Rename_Click;
+
             MenuStrip.Items.Add(delete);
             MenuStrip.Items.Add(rename);
+
             Historys.MouseClick += Historys_MouseClick;
+
             SetListView();
+
             if (main.Histories.Count == 0) {
                 Clear.Enabled = false;
             }

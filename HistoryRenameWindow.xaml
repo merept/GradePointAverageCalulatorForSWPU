@@ -10,7 +10,7 @@
         Title="重命名" Height="150" Width="400" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
     <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Height="80" Width="300">
         <Label Content="名称" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="12"/>
-        <TextBox x:Name="Name" HorizontalAlignment="Center" VerticalAlignment="Center" Width="120" FontSize="12" Height="20" TextChanged="Name_TextChanged"/>
+        <TextBox x:Name="Name" TextWrapping="NoWrap" HorizontalAlignment="Center" VerticalAlignment="Center" Width="120" FontSize="12" Height="20" TextChanged="Name_TextChanged"/>
         <wfi:WindowsFormsHost Height="20" Width="70" HorizontalAlignment="Center" VerticalAlignment="Bottom">
             <wf:Button x:Name="Rename" Text="修改"  Height="20" Width="70" Click="Rename_Click" Enabled="False" />
         </wfi:WindowsFormsHost>

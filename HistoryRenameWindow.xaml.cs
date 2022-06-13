@@ -15,9 +15,16 @@ namespace GradePointAverageCalulatorForSWPU {
         public HistoryRenameWindow(BindingList<History> histories, int index) {
             Histories = histories;
             Index = index;
+
             KeyDown += Esc_Key_Down;
             KeyDown += Enter_Key_Down;
+
             InitializeComponent();
+
+            Name.Text = Histories[Index].HistoryName;
+            Name.Focus();
+            Name.SelectAll();
+
             Rename.Font = new Font(Rename.Font.FontFamily, 8);
             Rename.FlatStyle = System.Windows.Forms.FlatStyle.System;
             Rename.FlatAppearance.BorderColor = Color.AliceBlue;

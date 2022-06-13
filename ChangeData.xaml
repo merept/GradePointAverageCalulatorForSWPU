@@ -11,7 +11,7 @@
     <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Height="100" Width="300">
         <Grid HorizontalAlignment="Left" Height="50" Margin="30,4,0,0" VerticalAlignment="Top" Width="60">
             <Label Content="学科名称" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="12" Margin="0,4,0,0"/>
-            <TextBox x:Name="Name" HorizontalAlignment="Center" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="50" FontSize="12" Margin="0,27,0,0"
+            <TextBox x:Name="Name" HorizontalAlignment="Center" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Width="50" FontSize="12" Margin="0,27,0,0"
                      TextChanged="Name_TextChanged"/>
         </Grid>
         <Grid HorizontalAlignment="Center" Height="50" VerticalAlignment="Top" Width="60" Margin="0,4,0,0">

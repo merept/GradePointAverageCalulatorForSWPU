@@ -15,19 +15,26 @@ namespace GradePointAverageCalulatorForSWPU {
         private GradePointAverage GradePointAverage { get; }
         private History History { get; set; }
 
-        public ChangeData(int index, History history, BindingList<GradeAndPoint> gradesAndPoints, GradePointAverage gradePointAverage) {
+        public ChangeData(int index, History history, GradePointAverage gradePointAverage) {
             InitializeComponent();
+
             Change.Font = new Font(Change.Font.FontFamily, 7);
             Change.Enabled = false;
             Change.FlatStyle = System.Windows.Forms.FlatStyle.System;
             Change.FlatAppearance.BorderColor = Color.AliceBlue;
             Change.Focus();
+
             KeyDown += Esc_Key_Down;
             KeyDown += Enter_Key_Down;
+
             Index = index;
             History = history;
-            GradesAndPoints = gradesAndPoints;
+            GradesAndPoints = gradePointAverage.GradesAndPoints;
             GradePointAverage = gradePointAverage;
+
+            Name.Text = GradesAndPoints[Index].Name;
+            Grade.Text = GradesAndPoints[Index].Grade.ToString();
+            Point.Text = GradesAndPoints[Index].Point.ToString();
         }
 
         private void Esc_Key_Down(object sender, KeyEventArgs e) {

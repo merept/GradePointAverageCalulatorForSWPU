@@ -27,20 +27,24 @@ namespace GradePointAverageCalulatorForSWPU {
     public partial class MainWindow : Window {
         public static string Version { get; } = Application.ResourceAssembly.GetName().Version.ToString();
         public static string VersionConfigFile { get; } = @"\version.xml";
+        private static string updateExePath = "";
         public static bool IsAutoUpdate { get; set; }
+        /// <summary>
+        /// 版本配置文件
+        /// </summary>
         public static XmlDocument Document { get; } = new XmlDocument();
         public static string HistoryFilePath { get; } = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + 
             @"\GradePointAverageCalulatorForSWPU";
         public static string HistoryFileName { get; set; } = $@"{HistoryFilePath}\{Environment.UserName}.gpa";
         public readonly string helpText = "欢迎来到SWPU平均学分绩点计算器!\n" +
             "\n" +
+            "2022.6.2更新 version 1.0.3.613\n" +
+            "增加下载更新完成提示，已经下载好的安装包不会重新下载\n" +
+            "\n" +
             "2022.6.4更新 version 1.0.3\n" +
             "1.现在可以直接通过历史记录文件打开程序并查看，并且\n" +
             "在打开的文件中所作的修改不会影响到原本的历史记录\n" +
             "2.现在检查更新成功后可以查看新版本更新内容\n" +
-            "\n" +
-            "2022.6.2更新 version 1.0.2\n" +
-            "增加检查/下载更新进度提示\n" +
             "\n" +
             "2022.5.28更新 version 1.0.0\n" +
             "全新版本的SWPU学分绩点计算器！\n" +
@@ -103,16 +107,35 @@ namespace GradePointAverageCalulatorForSWPU {
             KeyDown += Esc_Key_Down;
         }
 
+        /// <summary>
+        /// 使用 BinaryFormatter 来进行二进制加载历史记录文件
+        /// </summary>
         private void LoadHistory() {
             var fs = new FileStream(HistoryFileName, FileMode.Open);
             var formatter = new BinaryFormatter();
             Histories = (BindingList<History>)formatter.Deserialize(fs);
             fs.Close();
-            if (Histories.Count != 0 && !string.IsNullOrWhiteSpace(Histories.First().LastTime)) {
+            if (Histories.Count != 0 && !string.IsNullOrWhiteSpace(Histories.First().LastTime)) { //打开上次关闭时保留的文本
                 GradesAndPoints.Text = Histories.First().LastTime;
             }
         }
 
+        /// <summary>
+        /// 使用 BinaryFormatter 来进行二进制保存历史记录文件
+        /// </summary>
+        private void SaveHistory() {
+            if (Histories.Count != 0) { //在有历史记录的情况下保存输入框内的文本
+                Histories.First().LastTime = GradesAndPoints.Text;
+            }
+            var fs = new FileStream(HistoryFileName, FileMode.OpenOrCreate, FileAccess.Write);
+            var formatter = new BinaryFormatter();
+            formatter.Serialize(fs, Histories);
+            fs.Close();
+        }
+
+        /// <summary>
+        /// 初次启动时创建版本配置文件
+        /// </summary>
         private void CreateVersionConfig() {
             try {
                 XmlDeclaration declaration = Document.CreateXmlDeclaration("1.0", "UTF-8", "");
@@ -136,9 +159,14 @@ namespace GradePointAverageCalulatorForSWPU {
             try {
                 if (!Directory.Exists(HistoryFilePath))
                     Directory.CreateDirectory(HistoryFilePath);
-                var args = Environment.GetCommandLineArgs();
-                if (args.Length > 1)
-                    HistoryFileName = args[1];
+                var args = Environment.GetCommandLineArgs(); //获取命令行传入参数
+                if (args.Length > 1) { //通过文件打开的情况下，历史记录文件加载打开的文件
+                    Title = HistoryFileName = args[1]; //将标题设为打开文件的完全路径
+                    if (args[1].Length > 70) {
+                        var str = args[1].Split('\\');
+                        Title = $@"{str[0]}\{str[1]}\...\{str.Last()}";
+                    }
+                }
                 if (!File.Exists(HistoryFileName)) {
                     var f = new FileStream(HistoryFileName, FileMode.Create);
                     var fm = new BinaryFormatter();
@@ -155,7 +183,7 @@ namespace GradePointAverageCalulatorForSWPU {
                 //var str = root.SelectSingleNode("updateinfo").InnerText;
                 //str = str.Replace("\\n", Environment.NewLine);
                 //Message.ShowInformation($"检测到新版本是否更新？\n\n最新版本：V{Version}\n\n{str}", "test");
-                if (IsAutoUpdate) {
+                if (IsAutoUpdate) { //检查更新
                     var url = "https://gitee.com/merept/GradePointAverageCalulatorForSWPU/raw/master/update.xml";
                     using (var web = new WebClient()) {
                         web.DownloadFile(url, HistoryFilePath + @"\update.xml");
@@ -163,7 +191,7 @@ namespace GradePointAverageCalulatorForSWPU {
                     Update(true);
                 }
             } catch (WebException ex) {
-                if (!Regex.IsMatch(ex.Message, @"未能解析此远程名称+"))
+                if (!Regex.IsMatch(ex.Message, @"未能解析此远程名称+")) //在网络出错时不做任何提示，直接进入程序
                     Message.ShowError(ex.Message, ex.GetType().Name);
             } catch (Exception ex) {
                 //Log.Log(ex, "窗口加载时出错");
@@ -173,13 +201,7 @@ namespace GradePointAverageCalulatorForSWPU {
 
         private void MainWindow_Closing(object sender, CancelEventArgs e) {
             try {
-                if (Histories.Count != 0) {
-                    Histories.First().LastTime = GradesAndPoints.Text;
-                }
-                var fs = new FileStream(HistoryFileName, FileMode.OpenOrCreate, FileAccess.Write);
-                var formatter = new BinaryFormatter();
-                formatter.Serialize(fs, Histories);
-                fs.Close();
+                SaveHistory();
                 XmlElement root = Document.DocumentElement;
                 XmlNode isAutoUpdate = root.SelectSingleNode("autoupdate");
                 isAutoUpdate.InnerText = IsAutoUpdate.ToString();
@@ -197,6 +219,11 @@ namespace GradePointAverageCalulatorForSWPU {
                 Close();
         }
 
+        /// <summary>
+        /// 使用 MessageBox 显示结果弹窗
+        /// </summary>
+        /// <param name="gpa">学分绩点对象，用于获取结果</param>
+        /// <returns>用户点击了弹窗的 OK 即返回true，否则返回false</returns>
         public static bool MessageBoxShow(GradePointAverage gpa) {
             var result = $"您本学期成绩如下\n" +
                          $"总修读学分: {gpa.TotalPoint}\n" +
@@ -207,18 +234,27 @@ namespace GradePointAverageCalulatorForSWPU {
             return messageBoxResult == MessageBoxResult.OK;
         }
 
+        /// <summary>
+        /// 只显示成绩的结果详情窗口
+        /// </summary>
+        /// <param name="dataMatches">成绩的匹配项集合</param>
         private void ShowResult(MatchCollection dataMatches) {
             var gpa = new GradePointAverage();
             for (int i = 0; i < dataMatches.Count; i++)
                 gpa.Add(Convert.ToDouble(dataMatches[i].ToString()), Convert.ToDouble(dataMatches[++i].ToString()));
             var history = new History(gpa);
-            if (!Histories.Contains(history))
+            if (!Histories.Contains(history)) //检测历史记录是否已存在
                 Histories.Add(history);
             if (MessageBoxShow(gpa)) {
                 new ResultWindows(Histories.Last().GradePointAverage, Histories, Histories.IndexOf(Histories.Last())).Show();
             } else return;
         }
 
+        /// <summary>
+        /// 显示成绩和学科名字的结果详情窗口
+        /// </summary>
+        /// <param name="dataMatches">成绩的匹配项集合</param>
+        /// <param name="nameMatches">学科名字的匹配项集合</param>
         private void ShowResult(MatchCollection dataMatches, MatchCollection nameMatches) {
             var gpa = new GradePointAverage();
             for (int i = 0, j = 0; i < dataMatches.Count; i++, j++)
@@ -231,17 +267,22 @@ namespace GradePointAverageCalulatorForSWPU {
             } else return;
         }
 
+        /// <summary>
+        /// 纯复制粘贴时的结果显示方法
+        /// </summary>
+        /// <param name="datas">已经分割好数据的数组</param>
+        /// <param name="count">每一科的数据的个数，以便识别从哪里复制</param>
         private void ShowResult(string[] datas, int count) {
             var gpa = new GradePointAverage();
-            count = count == 6 ? 7 : count;
-            int gradeIndex = count == 7 ? 6 : 9, 
-                pointIndex = 4, 
-                nameIndex = 2;
+            count = count == 6 ? 7 : count; //从”全部成绩“处复制来的数据计数有可能出现错误
+            int gradeIndex = count == 7 ? 6 : 9, //成绩所在位置，不定期检查教务系统的表格，若位置有更改，在此处修改
+                pointIndex = 4, //学分所在位置
+                nameIndex = 2; //学科名称所在位置
             try {
                 for (int i = 0; i < datas.Length - 1; i += count) {
-                    if (Regex.IsMatch(datas[i + nameIndex], @"英语实践+") || 
-                        Regex.IsMatch(datas[i + nameIndex], @"全国英语+") || 
-                        datas[i].Substring(0, 1) == "0") continue;
+                    if (Regex.IsMatch(datas[i + nameIndex], @"英语实践+") || //”英语实践“课程不算在内
+                        Regex.IsMatch(datas[i + nameIndex], @"全国英语+") || //四六级成绩不算在内
+                        datas[i].Substring(0, 1) == "0") continue; //根据现有经验，课程号开头为0为选修课，不算在内
                     gpa.Add(datas[i + nameIndex], Convert.ToDouble(datas[i + pointIndex]), Convert.ToDouble(datas[i + gradeIndex]));
                 }
             } catch (Exception ex) {
@@ -256,9 +297,13 @@ namespace GradePointAverageCalulatorForSWPU {
             } else return;
         }
 
+        /// <summary>
+        /// 判断是否是纯复制
+        /// </summary>
+        /// <returns>纯复制，返回 true；否则，返回 false</returns>
         private bool IsJustCopy() {
             var str = GradesAndPoints.Text.Substring(0, 10);
-            if (Regex.IsMatch(str, @"\d{10}")) {
+            if (Regex.IsMatch(str, @"\d{10}")) { //如果是纯复制，开头是为是纯数字（课程号），以此判断
                 return true;
             } else return false;
         }
@@ -269,37 +314,36 @@ namespace GradePointAverageCalulatorForSWPU {
                 return;
             }
             if (IsJustCopy()) {
-                var s = Regex.Replace(GradesAndPoints.Text, @"\r\n+", "");
-                s = Regex.Replace(s, @"\u0020\u0020\u0020\u0020+", "\u0020\u0020");
-                s = Regex.Replace(s, @"成绩明细+", "");
-                var strs = Regex.Split(s, @"\u0020\u0020+");
+                var s = Regex.Replace(GradesAndPoints.Text, @"\r\n+", ""); //去掉所有的换行
+                s = Regex.Replace(s, @"\u0020\u0020\u0020\u0020+", "\u0020\u0020"); //IE下复制的文本有四个/u0020空格，全部替换为两个方便后面分割
+                s = Regex.Replace(s, @"成绩明细+", ""); //Edge下复制的文本带有”成绩名细“，需删掉
+                var strs = Regex.Split(s, @"\u0020\u0020+"); //将文本按两个空格分割
                 var count = 0;
-                for (int i = 0; i < strs.Length; i++, count++) {
+                for (int i = 0; i < strs.Length; i++, count++) { //计第一行涉及的数据个数，以此判断从哪里复制的
                     if (Regex.IsMatch(strs[i], @"\d{10}") && i != 0) break;
                 }
-                if (count <= 1) {
-                    strs = Regex.Split(s, @"	+");
-                    var listT = strs.ToList();
+                if (count <= 1) { //个数小于1个说明是在Edge下复制的
+                    strs = Regex.Split(s, @"	+"); //Edge下复制过来的空格不是两个/u0020，而是一个未查询到的空格，重新分割
+                    var listT = strs.ToList(); //Edge下每一行去掉\r\n后剩下的两个数据间隔是/u0020，会导致分割错误，转为List以便重组数组
                     count = 0;
-                    for (int i = 0; i < listT.Count; i++) {
-                        if (Regex.IsMatch(listT[i], @"\d{2}.\d\u0020\d{10}")) {
+                    for (int i = 0; i < listT.Count; i++) { //重组数组
+                        if (Regex.IsMatch(listT[i], @"\d{2}.\d\u0020\d{10}")) { 
                             var str = Regex.Split(listT[i], @"\u0020");
                             listT[i] = str[0];
                             listT.Insert(i + 1, str[1]);
                         }
                     }
-                    for (int i = 0; i < listT.Count; i++, count++)
+                    for (int i = 0; i < listT.Count; i++, count++) //重新计数
                         if (Regex.IsMatch(listT[i], @"\d{10}") && i != 0) break;
-                    Message.ShowInformation(count.ToString(), "");
-                    ShowResult(listT.ToArray(), count);
+                    //Message.ShowInformation(count.ToString(), "");
+                    ShowResult(listT.ToArray(), count); //显示结果
                 } else {
                     ShowResult(Regex.Split(s, @"\u0020\u0020+"), count);
                 }
-                
-            } else {
-                var dataMatches = Regex.Matches(GradesAndPoints.Text, @"\d+\.*\d*");
-                var nameMatches = Regex.Matches(GradesAndPoints.Text, @"[a-zA-z\u4e00-\u9fa5]+");
-                if (nameMatches.Count == 0 || nameMatches.Count != dataMatches.Count / 2) {
+            } else { //普通输入模式
+                var dataMatches = Regex.Matches(GradesAndPoints.Text, @"\d+\.*\d*"); //匹配成绩和学分
+                var nameMatches = Regex.Matches(GradesAndPoints.Text, @"[a-zA-z\u4e00-\u9fa5]+"); //匹配学科名字
+                if (nameMatches.Count == 0 || nameMatches.Count != dataMatches.Count / 2) { //名字和成绩数量必须完全一致才可以显示名字
                     ShowResult(dataMatches);
                 } else ShowResult(dataMatches, nameMatches);
             }
@@ -317,13 +361,7 @@ namespace GradePointAverageCalulatorForSWPU {
             };
             var result = dlg.ShowDialog();
             if (result == true) {
-                if (Histories.Count != 0) {
-                    Histories.First().LastTime = GradesAndPoints.Text;
-                }
-                var fs = new FileStream(HistoryFileName, FileMode.OpenOrCreate, FileAccess.Write);
-                var formatter = new BinaryFormatter();
-                formatter.Serialize(fs, Histories);
-                fs.Close();
+                SaveHistory();
                 File.Copy(HistoryFileName, dlg.FileName, true);
                 Message.ShowInformation("备份成功！", "备份记录");
             }
@@ -344,10 +382,25 @@ namespace GradePointAverageCalulatorForSWPU {
             }
         }
 
+        private void DownloadExe(XmlElement root) {
+            XmlNode download = root.SelectSingleNode("download");
+            updateExePath = HistoryFilePath + $@"\update-{root.SelectSingleNode("version").InnerText}.exe";
+            if (File.Exists(updateExePath)) {
+                InstallUpdate(updateExePath);
+                return;
+            }
+            using (var web = new WebClient()) {
+                CheckUpdate.Enabled = false;
+                web.DownloadProgressChanged += Update_DownloadProgressChanged;
+                web.DownloadFileCompleted += Update_DownloadFileCompleted;
+                var s = download.InnerText;
+                web.DownloadFileAsync(new Uri(download.InnerText), updateExePath);
+            }
+        }
+
         private void Update(bool isAuto) {
             try {
                 var updateConfigPath = HistoryFilePath + @"\update.xml";
-                var updateExePath = HistoryFilePath + @"\update.exe";
                 var updateXml = new XmlDocument();
                 updateXml.Load(updateConfigPath);
                 XmlElement root = updateXml.DocumentElement;
@@ -357,14 +410,7 @@ namespace GradePointAverageCalulatorForSWPU {
                                             .InnerText
                                             .Replace("\\n", Environment.NewLine);
                     if (Message.ShowYesNoDialog($"检测到新版本是否更新？\n\n最新版本：V{version.InnerText}\n\n{updateInfo}", "应用更新") == MessageBoxResult.Yes) {
-                        XmlNode download = root.SelectSingleNode("download");
-                        using (var web = new WebClient()) {
-                            CheckUpdate.Enabled = false;
-                            web.DownloadProgressChanged += Update_DownloadProgressChanged;
-                            web.DownloadFileCompleted += Update_DownloadFileCompleted;
-                            var s = download.InnerText;
-                            web.DownloadFileAsync(new Uri(download.InnerText), updateExePath);
-                        }
+                        DownloadExe(root);
                     }
                 } else {
                     if (!isAuto)
@@ -391,7 +437,7 @@ namespace GradePointAverageCalulatorForSWPU {
             } else {
                 CheckUpdate.Enabled = true;
                 UpdateProcess.Text = "";
-                InstallUpdate(HistoryFilePath + @"\update.exe");
+                InstallUpdate(updateExePath);
             }
         }
 
@@ -400,6 +446,8 @@ namespace GradePointAverageCalulatorForSWPU {
         }
 
         private void InstallUpdate(string path) {
+            if (Message.ShowYesNoDialog("是否立即安装更新？", "应用更新") == MessageBoxResult.No)
+                return;
             Process.Start(path);
             Environment.Exit(0);
         }
@@ -431,11 +479,14 @@ namespace GradePointAverageCalulatorForSWPU {
             }
         }
 
+        /// <summary>
+        /// 下载出错时，UpdateProcess 控件出现提示，十秒后自动清除
+        /// </summary>
         private async void Sleep10Sec() {
             await Task.Run(() => {
                     Thread.Sleep(10000);
-                    UpdateProcess.ForeColor = Color.Black;
-                    UpdateProcess.Text = "";
+                    UpdateProcess.ForeColor = Color.Black; //颜色改回黑色
+                    UpdateProcess.Text = ""; //清空文字
                 }
             );
         }
