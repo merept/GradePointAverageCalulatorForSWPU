@@ -38,8 +38,8 @@ namespace GradePointAverageCalulatorForSWPU {
         public static string HistoryFileName { get; set; } = $@"{HistoryFilePath}\{Environment.UserName}.gpa";
         public readonly string helpText = "欢迎来到SWPU平均学分绩点计算器!\n" +
             "\n" +
-            "2022.6.2更新 version 1.0.3.613\n" +
-            "增加下载更新完成提示，已经下载好的安装包不会重新下载\n" +
+            "2022.6.20更新 version 1.0.3.620\n" +
+            "增加对缓考科目的识别，会直接跳过已缓考的科目\n" +
             "\n" +
             "2022.6.4更新 version 1.0.3\n" +
             "1.现在可以直接通过历史记录文件打开程序并查看，并且\n" +
@@ -267,6 +267,29 @@ namespace GradePointAverageCalulatorForSWPU {
             } else return;
         }
 
+        private bool IsNotCount(string first, string name) {
+            return Regex.IsMatch(name, @"英语实践+") || //”英语实践“课程不算在内
+                   Regex.IsMatch(name, @"全国英语+") || //四六级成绩不算在内
+                   first.Substring(0, 1) == "0"; //根据现有经验，课程号开头为0为选修课，不算在内
+        }
+
+        /// <summary>
+        /// 判断是否为缓考科目
+        /// </summary>
+        /// <param name="first">下一排第一项，若不是10位课程号即这一排有第12位， 即特殊情况位</param>
+        /// <param name="grade">这一排的成绩位，缓考时成绩为0</param>
+        /// <returns></returns>
+        private bool IsDeferredExam(string first, string grade) {
+            if (grade == "0") {
+                if (!Regex.IsMatch(first, @"\d{10}")) {
+                    if (first == "缓考") {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         /// <summary>
         /// 纯复制粘贴时的结果显示方法
         /// </summary>
@@ -280,9 +303,14 @@ namespace GradePointAverageCalulatorForSWPU {
                 nameIndex = 2; //学科名称所在位置
             try {
                 for (int i = 0; i < datas.Length - 1; i += count) {
-                    if (Regex.IsMatch(datas[i + nameIndex], @"英语实践+") || //”英语实践“课程不算在内
-                        Regex.IsMatch(datas[i + nameIndex], @"全国英语+") || //四六级成绩不算在内
-                        datas[i].Substring(0, 1) == "0") continue; //根据现有经验，课程号开头为0为选修课，不算在内
+                    if (!Regex.IsMatch(datas[i], @"\d{10}"))
+                        i++;
+                    if (IsNotCount(datas[i], datas[i + nameIndex])) 
+                        continue;
+                    if (IsDeferredExam(datas[i + count], datas[i + gradeIndex])) {
+                        i++;
+                        continue;
+                    }
                     gpa.Add(datas[i + nameIndex], Convert.ToDouble(datas[i + pointIndex]), Convert.ToDouble(datas[i + gradeIndex]));
                 }
             } catch (Exception ex) {
@@ -384,7 +412,6 @@ namespace GradePointAverageCalulatorForSWPU {
 
         private void DownloadExe(XmlElement root) {
             XmlNode download = root.SelectSingleNode("download");
-            updateExePath = HistoryFilePath + $@"\update-{root.SelectSingleNode("version").InnerText}.exe";
             if (File.Exists(updateExePath)) {
                 InstallUpdate(updateExePath);
                 return;
@@ -404,6 +431,7 @@ namespace GradePointAverageCalulatorForSWPU {
                 var updateXml = new XmlDocument();
                 updateXml.Load(updateConfigPath);
                 XmlElement root = updateXml.DocumentElement;
+                updateExePath = HistoryFilePath + $@"\update-{root.SelectSingleNode("version").InnerText}.exe";
                 XmlNode version = root.SelectSingleNode("version");
                 if (Version != version.InnerText) {
                     var updateInfo = root.SelectSingleNode("updateinfo")
@@ -430,15 +458,20 @@ namespace GradePointAverageCalulatorForSWPU {
 
         private void Update_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e) {
             if (e.Error != null) {
-                if (Regex.IsMatch(e.Error.Message, @"未能解析此远程名称+")) {
-                    UpdateProcess.Text = "网络连接错误\n请检查网络配置。";
+                if (e.Error.GetType().Name == "WebException") {
+                    UpdateProcess.ForeColor = Color.Red;
+                    UpdateProcess.Text = "网络连接错误\n  请检查网络配置。";
+                    Sleep10Sec();
+                } else {
+                    UpdateProcess.ForeColor = Color.Red;
+                    UpdateProcess.Text = "未知错误，请稍后重试。";
                     Sleep10Sec();
                 }
             } else {
-                CheckUpdate.Enabled = true;
                 UpdateProcess.Text = "";
                 InstallUpdate(updateExePath);
             }
+            CheckUpdate.Enabled = true;
         }
 
         private void Update_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e) {
