@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <config>
-  <version>1.0.3.613</version>
-  <download>https://gitee.com/merept/GradePointAverageCalulatorForSWPU/attach_files/1093994/download/GPAC%20Setup.exe</download>
-  <updateinfo>增加下载更新完成提示，已经下载好的安装包不会重新下载</updateinfo>
+  <version>1.0.3.620</version>
+  <download>https://gitee.com/merept/GradePointAverageCalulatorForSWPU/attach_files/1100594/download/GPAC%20Setup.exe</download>
+  <updateinfo>增加对缓考科目的识别，会直接跳过已缓考的科目</updateinfo>
 </config>
