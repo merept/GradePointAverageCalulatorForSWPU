@@ -38,20 +38,14 @@ namespace GradePointAverageCalulatorForSWPU {
         public static string HistoryFileName { get; set; } = $@"{HistoryFilePath}\{Environment.UserName}.gpa";
         public readonly string helpText = "欢迎来到SWPU平均学分绩点计算器!\n" +
             "\n" +
-            "2022.6.20更新 version 1.0.3.620\n" +
-            "增加对缓考科目的识别，会直接跳过已缓考的科目\n" +
+            "2022.6.25更新 version 1.0.4\n" +
+            @"现在可以在结果详情中增加\删除科目，避免重复计算成绩" + 
+            "\n" +
             "\n" +
             "2022.6.4更新 version 1.0.3\n" +
             "1.现在可以直接通过历史记录文件打开程序并查看，并且\n" +
             "在打开的文件中所作的修改不会影响到原本的历史记录\n" +
             "2.现在检查更新成功后可以查看新版本更新内容\n" +
-            "\n" +
-            "2022.5.28更新 version 1.0.0\n" +
-            "全新版本的SWPU学分绩点计算器！\n" +
-            "更新内容：\n" +
-            "1.重新设计外观排版，以便容纳下新功能按钮\n" +
-            "2.现在可以直接在软件内备份和恢复历史记录了\n" +
-            "3.增加软件内的检查更新功能\n" +
             "\n" +
             "请在输入框输入您每科的学分及期末成绩，\n" +
             "可直接将教务系统成绩页的全部内容粘贴进输入框，\n" +
@@ -303,14 +297,14 @@ namespace GradePointAverageCalulatorForSWPU {
                 nameIndex = 2; //学科名称所在位置
             try {
                 for (int i = 0; i < datas.Length - 1; i += count) {
-                    if (!Regex.IsMatch(datas[i], @"\d{10}"))
-                        i++;
                     if (IsNotCount(datas[i], datas[i + nameIndex])) 
                         continue;
                     if (IsDeferredExam(datas[i + count], datas[i + gradeIndex])) {
                         i++;
                         continue;
                     }
+                    if (!Regex.IsMatch(datas[i], @"\d{10}"))
+                        i++;
                     gpa.Add(datas[i + nameIndex], Convert.ToDouble(datas[i + pointIndex]), Convert.ToDouble(datas[i + gradeIndex]));
                 }
             } catch (Exception ex) {

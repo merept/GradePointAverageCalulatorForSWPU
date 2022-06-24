@@ -43,14 +43,18 @@ namespace GradePointAverageCalulatorForSWPU {
             GradesAndPoints.Add(new GradeAndPoint(name, grade, point));
         }
 
-        public void Change(GradeAndPoint before, GradeAndPoint after) {
-            var beforeGp = 0.0;
-            if (before.Grade >= 60) {
-                beforeGp = (before.Grade - 60) / 10 + 1;
-                TotalNotFailedPoint -= before.Point;
+        public void Delete(GradeAndPoint gradeAndPoint) {
+            var gradeAndPointGP = 0.0;
+            if (gradeAndPoint.Grade >= 60) {
+                gradeAndPointGP = (gradeAndPoint.Grade - 60) / 10 + 1;
+                TotalNotFailedPoint -= gradeAndPoint.Point;
             } else Fails--;
-            TotalPoint -= before.Point;
-            TotalGrade -= beforeGp * before.Point;
+            TotalPoint -= gradeAndPoint.Point;
+            TotalGrade -= gradeAndPointGP * gradeAndPoint.Point;
+        }
+
+        public void Change(GradeAndPoint before, GradeAndPoint after) {
+            Delete(before);
             AddIn(after.Point, after.Grade);
         }
 
@@ -129,7 +133,7 @@ namespace GradePointAverageCalulatorForSWPU {
         public string LastTime { get; set; }
 
         public History(GradePointAverage gradePointAverage) {
-            UpdateTime = $"{DateTime.Now:yyyy/MM/dd H:mm:ss}";
+            UpdateTime = $"{DateTime.Now}";
             HistoryName = $"{DateTime.Now.Date:yyyy-MM-dd}";
             GradePointAverage = gradePointAverage;
         }

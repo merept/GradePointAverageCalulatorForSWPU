@@ -4,6 +4,8 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
+//using MessageUtil;
+using Message = MessageUtil.Message;
 
 namespace GradePointAverageCalulatorForSWPU {
     /// <summary>
@@ -11,8 +13,7 @@ namespace GradePointAverageCalulatorForSWPU {
     /// </summary>
     public partial class ResultWindowWithNames : Window {
         private GradePointAverage GradePointAverage { get; }
-        private BindingList<History> Histories { get; }
-        private int Index { get; }
+        private History History { get; }
         private ContextMenuStrip MenuStrip { get; set; } = new ContextMenuStrip();
 
         public ResultWindowWithNames(GradePointAverage GPA, BindingList<History> histories, int index) {
@@ -26,15 +27,21 @@ namespace GradePointAverageCalulatorForSWPU {
             KeyDown += Esc_Key_Down;
 
             GradePointAverage = GPA;
-            Histories = histories;
-            Index = index;
+            History = histories[index];
 
             SetListView();
 
             var change = new ToolStripMenuItem("修改");
             change.Click += MenuItem_Click;
-
             MenuStrip.Items.Add(change);
+
+            var add = new ToolStripMenuItem("添加");
+            add.Click += Add_Click;
+            MenuStrip.Items.Add(add);
+
+            var delete = new ToolStripMenuItem("删除");
+            delete.Click += Delete_Click;
+            MenuStrip.Items.Add(delete);
 
             Results.MouseClick += Results_MouseClick;
             ResultOfGpa.Content = $"总修读学分: {GradePointAverage.TotalPoint} " +
@@ -71,7 +78,34 @@ namespace GradePointAverageCalulatorForSWPU {
             var index = Results.SelectedItems[0].Index;
             if (index < 0)
                 return;
-            new ChangeData(index, Histories[Index], GradePointAverage).ShowDialog();
+            new ChangeData(index, History, GradePointAverage).ShowDialog();
+            SetListView();
+            ResultOfGpa.Content = $"总修读学分: {GradePointAverage.TotalPoint} " +
+                $"已通过学分: {GradePointAverage.TotalNotFailedPoint} " +
+                $"不及格科目数: {GradePointAverage.Fails} " +
+                $"平均学分绩点: {GradePointAverage.Result:0.00}";
+        }
+
+        private void Add_Click(object sender, EventArgs e) {
+            var index = Results.SelectedItems[0].Index;
+            if (index < 0)
+                return;
+            new ChangeData(History, GradePointAverage).ShowDialog();
+            SetListView();
+            ResultOfGpa.Content = $"总修读学分: {GradePointAverage.TotalPoint} " +
+                $"已通过学分: {GradePointAverage.TotalNotFailedPoint} " +
+                $"不及格科目数: {GradePointAverage.Fails} " +
+                $"平均学分绩点: {GradePointAverage.Result:0.00}";
+        }
+        private void Delete_Click(object sender, EventArgs e) {
+            if (Message.ShowYesNoDialog("是否要删除该科目？", "删除科目") == System.Windows.Forms.DialogResult.No)
+                return;
+            var index = Results.SelectedItems[0].Index;
+            if (index < 0)
+                return;
+            GradePointAverage.Delete(GradePointAverage.GradesAndPoints[index]);
+            GradePointAverage.GradesAndPoints.RemoveAt(index);
+            History.UpdateTime = $"{DateTime.Now}";
             SetListView();
             ResultOfGpa.Content = $"总修读学分: {GradePointAverage.TotalPoint} " +
                 $"已通过学分: {GradePointAverage.TotalNotFailedPoint} " +

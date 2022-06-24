@@ -12,27 +12,15 @@
 
 ### 更新
 
+- [2022.6.25 更新 V1.0.4](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V1.0.4)
+
+> 现在可以在结果详情中增加\删除科目，避免重复计算成绩
+
 - [2022.6.4 更新 V1.0.3](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V1.0.3)
 
 > 1.现在可以直接通过历史记录文件打开程序并查看，并且在打开的文件中所作的修改不会影响到原本的历史记录
 >
 > 2.现在检查更新成功后可以查看新版本更新内容
-
-- [2022.6.2 更新 V1.0.2](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V1.0.2)
-
-> 增加检查/下载更新进度提示
-
-- [2022.5.28 更新 V1.0.0](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V1.0.0)
-
-> 全新版本的SWPU学分绩点计算器！
->
-> 更新内容
->
-> 1.重新设计外观排版，以便容纳下新功能按钮
->
-> 2.现在可以直接在软件内备份和恢复历史记录了
->
-> 3.增加软件内的检查更新功能
 
 - [更多历史版本更新内容](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases)
 

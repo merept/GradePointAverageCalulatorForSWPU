@@ -14,6 +14,7 @@ namespace GradePointAverageCalulatorForSWPU {
         private BindingList<GradeAndPoint> GradesAndPoints { get; }
         private GradePointAverage GradePointAverage { get; }
         private History History { get; set; }
+        private bool IsAdding { get; } = false;
 
         public ChangeData(int index, History history, GradePointAverage gradePointAverage) {
             InitializeComponent();
@@ -37,6 +38,25 @@ namespace GradePointAverageCalulatorForSWPU {
             Point.Text = GradesAndPoints[Index].Point.ToString();
         }
 
+        public ChangeData(History history, GradePointAverage gradePointAverage) {
+            InitializeComponent();
+
+            Change.Font = new Font(Change.Font.FontFamily, 7);
+            Change.Enabled = false;
+            Change.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            Change.FlatAppearance.BorderColor = Color.AliceBlue;
+            Change.Focus();
+
+            KeyDown += Esc_Key_Down;
+            KeyDown += Enter_Key_Down;
+
+            History = history;
+            GradesAndPoints = gradePointAverage.GradesAndPoints;
+            GradePointAverage = gradePointAverage;
+
+            IsAdding = true;
+        }
+
         private void Esc_Key_Down(object sender, KeyEventArgs e) {
             if (e.Key == Key.Escape)
                 Close();
@@ -47,7 +67,7 @@ namespace GradePointAverageCalulatorForSWPU {
                 Change_Click(null, null);
         }
 
-        private void Change_Click(object sender, EventArgs e) {
+        private void Changeing() {
             var name = GradesAndPoints[Index].Name;
             var grade = GradesAndPoints[Index].Grade;
             var point = GradesAndPoints[Index].Point;
@@ -68,6 +88,34 @@ namespace GradePointAverageCalulatorForSWPU {
             GradesAndPoints.Insert(Index, new GradeAndPoint(name, grade, point));
             History.UpdateTime = $"{DateTime.Now}";
             Close();
+        }
+
+        private void Adding() {
+            string name;
+            double grade, point;
+            if (string.IsNullOrWhiteSpace(Grade.Text) || string.IsNullOrWhiteSpace(Point.Text)) {
+                Message.ShowError("请输入完整");
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(Name.Text)) {
+                name = "";
+            } else name = Name.Text;
+            try {
+                grade = Convert.ToDouble(Grade.Text);
+                point = Convert.ToDouble(Point.Text);
+            } catch (FormatException) {
+                Message.ShowError("请输入正确的数值");
+                return;
+            }
+            GradePointAverage.Add(name, point, grade);
+            History.UpdateTime = $"{DateTime.Now}";
+            Close();
+        }
+
+        private void Change_Click(object sender, EventArgs e) {
+            if (IsAdding) {
+                Adding();
+            } else Changeing();
         }
 
         private void Name_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e) {
