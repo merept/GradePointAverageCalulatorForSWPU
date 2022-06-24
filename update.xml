@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <config>
-  <version>1.0.4</version>
+  <version>1.0.4.0</version>
   <download>https://gitee.com/merept/GradePointAverageCalulatorForSWPU/attach_files/1100594/download/GPAC%20Setup.exe</download>
   <updateinfo>现在可以在结果详情中增加\删除科目，避免重复计算成绩</updateinfo>
 </config>
