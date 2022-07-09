@@ -410,14 +410,16 @@ namespace GradePointAverageCalulatorForSWPU {
             }
         }
 
-        private void DownloadExe(XmlElement root) {
+        private void DownloadExe(XmlElement root, bool isAuto) {
             XmlNode download = root.SelectSingleNode("download");
             if (File.Exists(updateExePath)) {
                 InstallUpdate(updateExePath);
                 return;
             }
             using (var web = new WebClient()) {
-                CheckUpdate.Enabled = false;
+                if (!isAuto) {
+                    CheckUpdate.Enabled = false;
+                }
                 web.DownloadProgressChanged += Update_DownloadProgressChanged;
                 web.DownloadFileCompleted += Update_DownloadFileCompleted;
                 var s = download.InnerText;
@@ -438,7 +440,7 @@ namespace GradePointAverageCalulatorForSWPU {
                                             .InnerText
                                             .Replace("\\n", Environment.NewLine);
                     if (Message.ShowYesNoDialog($"检测到新版本是否更新？\n\n最新版本：V{version.InnerText}\n\n{updateInfo}", "应用更新") == MessageBoxResult.Yes) {
-                        DownloadExe(root);
+                        DownloadExe(root, isAuto);
                     }
                 } else {
                     if (!isAuto)
@@ -457,25 +459,34 @@ namespace GradePointAverageCalulatorForSWPU {
         }
 
         private void Update_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e) {
-            if (e.Error != null) {
-                if (e.Error.GetType().Name == "WebException") {
-                    UpdateProcess.ForeColor = Color.Red;
-                    UpdateProcess.Text = "网络连接错误\n  请检查网络配置。";
-                    Sleep10Sec();
+            try {
+                if (e.Error != null) {
+                    if (e.Error.GetType().Name == "WebException") {
+                        UpdateProcess.ForeColor = Color.Red;
+                        UpdateProcess.Text = "网络连接错误\n  请检查网络配置。";
+                        Sleep10Sec();
+                    } else {
+                        UpdateProcess.ForeColor = Color.Red;
+                        UpdateProcess.Text = "未知错误，请稍后重试。";
+                        Sleep10Sec();
+                    }
                 } else {
-                    UpdateProcess.ForeColor = Color.Red;
-                    UpdateProcess.Text = "未知错误，请稍后重试。";
-                    Sleep10Sec();
+                    UpdateProcess.Text = "";
+                    InstallUpdate(updateExePath);
                 }
-            } else {
-                UpdateProcess.Text = "";
+                CheckUpdate.Enabled = true;
+            } catch (Exception) {
                 InstallUpdate(updateExePath);
+                return;
             }
-            CheckUpdate.Enabled = true;
         }
 
         private void Update_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e) {
-            UpdateProcess.Text = $"下载更新中... {e.ProgressPercentage:0} %";
+            try {
+                UpdateProcess.Text = $"下载更新中... {e.ProgressPercentage:0} %";
+            } catch (Exception) {
+                return;
+            }
         }
 
         private void InstallUpdate(string path) {
