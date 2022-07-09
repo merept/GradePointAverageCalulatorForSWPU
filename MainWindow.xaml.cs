@@ -38,9 +38,8 @@ namespace GradePointAverageCalulatorForSWPU {
         public static string HistoryFileName { get; set; } = $@"{HistoryFilePath}\{Environment.UserName}.gpa";
         public readonly string helpText = "欢迎来到SWPU平均学分绩点计算器!\n" +
             "\n" +
-            "2022.6.25更新 version 1.0.4\n" +
-            @"现在可以在结果详情中增加\删除科目，避免重复计算成绩" + 
-            "\n" +
+            "2022.7.9更新 version 1.0.4.709\n" +
+            "优化了界面加载速度\n" + 
             "\n" +
             "2022.6.4更新 version 1.0.3\n" +
             "1.现在可以直接通过历史记录文件打开程序并查看，并且\n" +
@@ -65,6 +64,9 @@ namespace GradePointAverageCalulatorForSWPU {
 
         public MainWindow() {
             System.Windows.Forms.Application.EnableVisualStyles();
+
+            BeforeWindowLoaded();
+
             if (Message.ShowOKCancelDialog(helpText, "使用前必读!!!") == MessageBoxResult.Cancel)
                 Environment.Exit(0);
             Loaded += MainWindow_Loaded;
@@ -99,6 +101,25 @@ namespace GradePointAverageCalulatorForSWPU {
             GradesAndPoints.Font = new Font(GradesAndPoints.Font.FontFamily, 13);
 
             KeyDown += Esc_Key_Down;
+        }
+
+        private void BeforeWindowLoaded() {
+            if (!File.Exists(HistoryFilePath + VersionConfigFile))
+                CreateVersionConfig();
+            Document.Load(HistoryFilePath + VersionConfigFile);
+            XmlElement root = Document.DocumentElement;
+            XmlNode isAutoUpdate = root.SelectSingleNode("autoupdate");
+            IsAutoUpdate = Convert.ToBoolean(isAutoUpdate.InnerText);
+            //var str = root.SelectSingleNode("updateinfo").InnerText;
+            //str = str.Replace("\\n", Environment.NewLine);
+            //Message.ShowInformation($"检测到新版本是否更新？\n\n最新版本：V{Version}\n\n{str}", "test");
+            if (IsAutoUpdate) { //检查更新
+                var url = "https://gitee.com/merept/GradePointAverageCalulatorForSWPU/raw/master/update.xml";
+                using (var web = new WebClient()) {
+                    web.DownloadFile(url, HistoryFilePath + @"\update.xml");
+                }
+                Update(true);
+            }
         }
 
         /// <summary>
@@ -168,22 +189,7 @@ namespace GradePointAverageCalulatorForSWPU {
                     f.Close();
                 }
                 LoadHistory();
-                if (!File.Exists(HistoryFilePath + VersionConfigFile))
-                    CreateVersionConfig();
-                Document.Load(HistoryFilePath + VersionConfigFile);
-                XmlElement root = Document.DocumentElement;
-                XmlNode isAutoUpdate = root.SelectSingleNode("autoupdate");
-                AutoCheck.Checked = Convert.ToBoolean(isAutoUpdate.InnerText);
-                //var str = root.SelectSingleNode("updateinfo").InnerText;
-                //str = str.Replace("\\n", Environment.NewLine);
-                //Message.ShowInformation($"检测到新版本是否更新？\n\n最新版本：V{Version}\n\n{str}", "test");
-                if (IsAutoUpdate) { //检查更新
-                    var url = "https://gitee.com/merept/GradePointAverageCalulatorForSWPU/raw/master/update.xml";
-                    using (var web = new WebClient()) {
-                        web.DownloadFile(url, HistoryFilePath + @"\update.xml");
-                    }
-                    Update(true);
-                }
+                AutoCheck.Checked = Convert.ToBoolean(IsAutoUpdate);
             } catch (WebException ex) {
                 if (!Regex.IsMatch(ex.Message, @"未能解析此远程名称+")) //在网络出错时不做任何提示，直接进入程序
                     Message.ShowError(ex.Message, ex.GetType().Name);

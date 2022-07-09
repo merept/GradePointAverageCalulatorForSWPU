@@ -12,9 +12,9 @@
 
 ### 更新
 
-- [2022.6.25 更新 V1.0.4](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V1.0.4)
+- [2022.7.9更新 V1.0.4.709](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V1.0.4.709)
 
-> 现在可以在结果详情中增加\删除科目，避免重复计算成绩
+> 优化了界面加载速度
 
 - [2022.6.4 更新 V1.0.3](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V1.0.3)
 
