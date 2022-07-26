@@ -38,8 +38,8 @@ namespace GradePointAverageCalulatorForSWPU {
         public static string HistoryFileName { get; set; } = $@"{HistoryFilePath}\{Environment.UserName}.gpa";
         public readonly string helpText = "欢迎来到SWPU平均学分绩点计算器!\n" +
             "\n" +
-            "2022.7.9更新 version 1.0.4.709\n" +
-            "优化了界面加载速度\n" + 
+            "2022.7.26更新 version 1.0.4.726\n" +
+            "做了一些小更改\n" + 
             "\n" +
             "2022.6.4更新 version 1.0.3\n" +
             "1.现在可以直接通过历史记录文件打开程序并查看，并且\n" +
