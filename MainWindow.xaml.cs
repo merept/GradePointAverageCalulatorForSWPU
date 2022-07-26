@@ -439,12 +439,15 @@ namespace GradePointAverageCalulatorForSWPU {
                     var updateInfo = root.SelectSingleNode("updateinfo")
                                             .InnerText
                                             .Replace("\\n", Environment.NewLine);
-                    if (Message.ShowYesNoDialog($"检测到新版本是否更新？\n\n最新版本：V{version.InnerText}\n\n{updateInfo}", "应用更新") == MessageBoxResult.Yes) {
+                    if (Message.ShowYesNoDialog($"检测到新版本是否更新？\n\n最新版本：v{version.InnerText}\n\n{updateInfo}", "应用更新") == MessageBoxResult.Yes) {
                         DownloadExe(root, isAuto);
                     }
                 } else {
-                    if (!isAuto)
-                        Message.ShowInformation("当前已为最新版本！", "应用更新");
+                    if (!isAuto) {
+                        //Message.ShowInformation("当前已为最新版本！", "应用更新");
+                        UpdateProcess.Text = $"当前已为最新版本\nv{Version}";
+                        Sleep10Sec();
+                    }
                     if (File.Exists(updateExePath))
                         File.Delete(updateExePath);
                 }
@@ -512,9 +515,13 @@ namespace GradePointAverageCalulatorForSWPU {
 
         private void CheckUpdate_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e) {
             if (e.Error != null) {
-                if (Regex.IsMatch(e.Error.Message, @"未能解析此远程名称+")) {
+                if (e.Error.GetType().Name == "WebException") {
                     UpdateProcess.ForeColor = Color.Red;
                     UpdateProcess.Text = "网络连接错误\n  请检查网络配置。";
+                    Sleep10Sec();
+                } else {
+                    UpdateProcess.ForeColor = Color.Red;
+                    UpdateProcess.Text = "未知错误，请稍后重试。";
                     Sleep10Sec();
                 }
             } else {
