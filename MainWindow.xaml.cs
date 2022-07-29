@@ -28,6 +28,7 @@ namespace GradePointAverageCalulatorForSWPU {
         public static string Version { get; } = Application.ResourceAssembly.GetName().Version.ToString();
         public static string VersionConfigFile { get; } = @"\version.xml";
         private static string updateExePath = "";
+        private static string updateDownloading = "";
         public static bool IsAutoUpdate { get; set; }
         /// <summary>
         /// 版本配置文件
@@ -38,8 +39,8 @@ namespace GradePointAverageCalulatorForSWPU {
         public static string HistoryFileName { get; set; } = $@"{HistoryFilePath}\{Environment.UserName}.gpa";
         public readonly string helpText = "欢迎来到SWPU平均学分绩点计算器!\n" +
             "\n" +
-            "2022.7.26更新 version 1.0.4.726\n" +
-            "做了一些小更改\n" + 
+            "2022.7.29更新 version 1.0.4.729\n" +
+            "修复了下载更新时可能出现的bug\n" + 
             "\n" +
             "2022.6.4更新 version 1.0.3\n" +
             "1.现在可以直接通过历史记录文件打开程序并查看，并且\n" +
@@ -423,7 +424,7 @@ namespace GradePointAverageCalulatorForSWPU {
                 web.DownloadProgressChanged += Update_DownloadProgressChanged;
                 web.DownloadFileCompleted += Update_DownloadFileCompleted;
                 var s = download.InnerText;
-                web.DownloadFileAsync(new Uri(download.InnerText), updateExePath);
+                web.DownloadFileAsync(new Uri(download.InnerText), updateDownloading);
             }
         }
 
@@ -433,6 +434,7 @@ namespace GradePointAverageCalulatorForSWPU {
                 var updateXml = new XmlDocument();
                 updateXml.Load(updateConfigPath);
                 XmlElement root = updateXml.DocumentElement;
+                updateDownloading = HistoryFilePath + $@"\update-{root.SelectSingleNode("version").InnerText}.downloading";
                 updateExePath = HistoryFilePath + $@"\update-{root.SelectSingleNode("version").InnerText}.exe";
                 XmlNode version = root.SelectSingleNode("version");
                 if (Version != version.InnerText) {
@@ -475,6 +477,8 @@ namespace GradePointAverageCalulatorForSWPU {
                     }
                 } else {
                     UpdateProcess.Text = "";
+                    File.Copy(updateDownloading, updateExePath, true);
+                    File.Delete(updateDownloading);
                     InstallUpdate(updateExePath);
                 }
                 CheckUpdate.Enabled = true;
