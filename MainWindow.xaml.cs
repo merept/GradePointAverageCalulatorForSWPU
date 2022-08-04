@@ -39,10 +39,10 @@ namespace GradePointAverageCalulatorForSWPU {
         public static string HistoryFileName { get; set; } = $@"{HistoryFilePath}\{Environment.UserName}.gpa";
         public readonly string helpText = "欢迎来到SWPU平均学分绩点计算器!\n" +
             "\n" +
-            "2022.7.29更新 version 1.0.4.729\n" +
-            "修复了下载更新时可能出现的bug\n" + 
+            "2022.8.4 更新 version 1.0.4.804\n" +
+            "修复了未联网时的闪退bug\n" + 
             "\n" +
-            "2022.6.4更新 version 1.0.3\n" +
+            "2022.6.4 更新 version 1.0.3\n" +
             "1.现在可以直接通过历史记录文件打开程序并查看，并且\n" +
             "在打开的文件中所作的修改不会影响到原本的历史记录\n" +
             "2.现在检查更新成功后可以查看新版本更新内容\n" +
@@ -114,12 +114,18 @@ namespace GradePointAverageCalulatorForSWPU {
             //var str = root.SelectSingleNode("updateinfo").InnerText;
             //str = str.Replace("\\n", Environment.NewLine);
             //Message.ShowInformation($"检测到新版本是否更新？\n\n最新版本：V{Version}\n\n{str}", "test");
-            if (IsAutoUpdate) { //检查更新
-                var url = "https://gitee.com/merept/GradePointAverageCalulatorForSWPU/raw/master/update.xml";
-                using (var web = new WebClient()) {
-                    web.DownloadFile(url, HistoryFilePath + @"\update.xml");
+            try {
+                if (IsAutoUpdate) { //检查更新
+                    var url = "https://gitee.com/merept/GradePointAverageCalulatorForSWPU/raw/master/update.xml";
+                    using (var web = new WebClient()) {
+                        web.DownloadFile(url, HistoryFilePath + @"\update.xml");
+                    }
+                    Update(true);
                 }
-                Update(true);
+            } catch (WebException) {
+
+            } catch (Exception ex) {
+                Message.ShowError(ex.Message, "SWPU学分绩点计算器");
             }
         }
 
@@ -507,7 +513,7 @@ namespace GradePointAverageCalulatorForSWPU {
             try {
                 var url = "https://gitee.com/merept/GradePointAverageCalulatorForSWPU/raw/master/update.xml";
                 using (var web = new WebClient()) {
-                    web.DownloadProgressChanged += CheckUpdate_DownloadProgressChanged;
+                    //web.DownloadProgressChanged += CheckUpdate_DownloadProgressChanged;
                     web.DownloadFileCompleted += CheckUpdate_DownloadFileCompleted;
                     web.DownloadFileAsync(new Uri(url), HistoryFilePath + @"\update.xml");
                 }
@@ -519,17 +525,21 @@ namespace GradePointAverageCalulatorForSWPU {
 
         private void CheckUpdate_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e) {
             if (e.Error != null) {
-                if (e.Error.GetType().Name == "WebException") {
-                    UpdateProcess.ForeColor = Color.Red;
-                    UpdateProcess.Text = "网络连接错误\n  请检查网络配置。";
-                    Sleep10Sec();
-                } else {
-                    UpdateProcess.ForeColor = Color.Red;
-                    UpdateProcess.Text = "未知错误，请稍后重试。";
-                    Sleep10Sec();
+                try {
+                    if (e.Error.GetType().Name == "WebException") {
+                        UpdateProcess.ForeColor = Color.Red;
+                        UpdateProcess.Text = "网络连接错误\n  请检查网络配置。";
+                        Sleep10Sec();
+                    } else {
+                        UpdateProcess.ForeColor = Color.Red;
+                        UpdateProcess.Text = "未知错误，请稍后重试。";
+                        Sleep10Sec();
+                    }
+                } catch (Exception) {
+
                 }
             } else {
-                UpdateProcess.Text = "";
+                //UpdateProcess.Text = "";
                 Update(false);
             }
         }
@@ -546,9 +556,9 @@ namespace GradePointAverageCalulatorForSWPU {
             );
         }
 
-        private void CheckUpdate_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e) {
-            UpdateProcess.Text = $"检查更新中... {e.ProgressPercentage:0} %";
-        }
+        //private void CheckUpdate_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e) {
+        //    UpdateProcess.Text = $"检查更新中... {e.ProgressPercentage:0} %";
+        //}
 
         private void AutoCheck_CheckedChanged(object sender, EventArgs e) {
             IsAutoUpdate = AutoCheck.Checked;

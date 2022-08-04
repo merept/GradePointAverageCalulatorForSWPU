@@ -12,11 +12,11 @@
 
 ### 更新
 
-- [2022.7.29更新 v1.0.4.729](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/v1.0.4)
+- [2022.8.4 更新 v1.0.4.804](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/latest)
 
 > 修复了下载更新时可能出现的bug
 
-- [2022.6.4更新 v1.0.3](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V1.0.3)
+- [2022.6.4 更新 v1.0.3](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V1.0.3)
 
 > 1.现在可以直接通过历史记录文件打开程序并查看，并且在打开的文件中所作的修改不会影响到原本的历史记录
 >
