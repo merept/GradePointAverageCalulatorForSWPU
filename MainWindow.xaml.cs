@@ -39,8 +39,8 @@ namespace GradePointAverageCalulatorForSWPU {
         public static string HistoryFileName { get; set; } = $@"{HistoryFilePath}\{Environment.UserName}.gpa";
         public readonly string helpText = "欢迎来到SWPU平均学分绩点计算器!\n" +
             "\n" +
-            "2022.8.4 更新 version 1.0.4.804\n" +
-            "修复了未联网时的闪退bug\n" + 
+            "2022.8.12 更新 version 1.0.4.812\n" +
+            "修复了更新后错误弹窗的bug\n" + 
             "\n" +
             "2022.6.4 更新 version 1.0.3\n" +
             "1.现在可以直接通过历史记录文件打开程序并查看，并且\n" +
@@ -102,6 +102,9 @@ namespace GradePointAverageCalulatorForSWPU {
             GradesAndPoints.Font = new Font(GradesAndPoints.Font.FontFamily, 13);
 
             KeyDown += Esc_Key_Down;
+
+            if (File.Exists(updateExePath))
+                File.Delete(updateExePath);
         }
 
         private void BeforeWindowLoaded() {
@@ -447,7 +450,7 @@ namespace GradePointAverageCalulatorForSWPU {
                     var updateInfo = root.SelectSingleNode("updateinfo")
                                             .InnerText
                                             .Replace("\\n", Environment.NewLine);
-                    if (Message.ShowYesNoDialog($"检测到新版本是否更新？\n\n最新版本：v{version.InnerText}\n\n{updateInfo}", "应用更新") == MessageBoxResult.Yes) {
+                    if (Message.ShowYesNoDialog($"检测到新版本是否更新？\n\n当前版本：v{Version}\n\n最新版本：v{version.InnerText}\n\n{updateInfo}", "应用更新") == MessageBoxResult.Yes) {
                         DownloadExe(root, isAuto);
                     }
                 } else {
@@ -456,8 +459,6 @@ namespace GradePointAverageCalulatorForSWPU {
                         UpdateProcess.Text = $"当前已为最新版本\nv{Version}";
                         Sleep10Sec();
                     }
-                    if (File.Exists(updateExePath))
-                        File.Delete(updateExePath);
                 }
             } catch (WebException ex) {
                 if (Regex.IsMatch(ex.Message, @"未能解析此远程名称+")) {
