@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <config>
-  <version>1.0.4.812</version>
-  <download>https://gitee.com/merept/GradePointAverageCalulatorForSWPU/releases/download/v1.0.4/GPAC_Setup.exe</download>
-  <updateinfo>修复了更新后错误弹窗的bug</updateinfo>
+  <version>1.0.4.804</version>
+  <download>https://gitee.com/merept/GradePointAverageCalulatorForSWPU/attach_files/1147034/download/GPAC%20Setup.exe</download>
+  <updateinfo>修复了未联网时的闪退bug</updateinfo>
 </config>
