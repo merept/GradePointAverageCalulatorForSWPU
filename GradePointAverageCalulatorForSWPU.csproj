@@ -101,30 +101,30 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ChangeData.xaml.cs">
+    <Compile Include="src\GPAService\ChangeData.xaml.cs">
       <DependentUpon>ChangeData.xaml</DependentUpon>
     </Compile>
-    <Compile Include="HistoryRenameWindow.xaml.cs">
+    <Compile Include="src\History\HistoryRenameWindow.xaml.cs">
       <DependentUpon>HistoryRenameWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="HistoryWindow.xaml.cs">
+    <Compile Include="src\History\HistoryWindow.xaml.cs">
       <DependentUpon>HistoryWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ResultWindows.xaml.cs">
+    <Compile Include="src\Result\ResultWindows.xaml.cs">
       <DependentUpon>ResultWindows.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ResultWindowWithNames.xaml.cs">
+    <Compile Include="src\Result\ResultWindowWithNames.xaml.cs">
       <DependentUpon>ResultWindowWithNames.xaml</DependentUpon>
     </Compile>
-    <Page Include="ChangeData.xaml">
+    <Page Include="src\GPAService\ChangeData.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="HistoryRenameWindow.xaml">
+    <Page Include="src\History\HistoryRenameWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="HistoryWindow.xaml">
+    <Page Include="src\History\HistoryWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -136,16 +136,16 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="GradePointAverage.cs" />
+    <Compile Include="src\GPAService\GradePointAverage.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="ResultWindows.xaml">
+    <Page Include="src\Result\ResultWindows.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ResultWindowWithNames.xaml">
+    <Page Include="src\Result\ResultWindowWithNames.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
