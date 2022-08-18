@@ -12,6 +12,10 @@
 
 ### 更新
 
+- [2022.8.18 更新 v1.0.4.818](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/latest)
+
+> 修复了第一次启动时无法启动的bug
+
 - [2022.8.12 更新 v1.0.4.812](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/latest)
 
 > 修复了更新后错误弹窗的bug

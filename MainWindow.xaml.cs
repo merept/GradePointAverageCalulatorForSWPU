@@ -39,6 +39,9 @@ namespace GradePointAverageCalulatorForSWPU {
         public static string HistoryFileName { get; set; } = $@"{HistoryFilePath}\{Environment.UserName}.gpa";
         public readonly string helpText = "欢迎来到SWPU平均学分绩点计算器!\n" +
             "\n" +
+            "2022.8.18 更新 version 1.0.4.818\n" +
+            "修复了第一次启动时无法启动的bug\n" +
+            "\n" +
             "2022.8.12 更新 version 1.0.4.812\n" +
             "修复了更新后错误弹窗的bug\n" + 
             "\n" +
@@ -108,6 +111,8 @@ namespace GradePointAverageCalulatorForSWPU {
         }
 
         private void BeforeWindowLoaded() {
+            if (!Directory.Exists(HistoryFilePath))
+                Directory.CreateDirectory(HistoryFilePath);
             if (!File.Exists(HistoryFilePath + VersionConfigFile))
                 CreateVersionConfig();
             Document.Load(HistoryFilePath + VersionConfigFile);
@@ -182,8 +187,6 @@ namespace GradePointAverageCalulatorForSWPU {
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e) {
             try {
-                if (!Directory.Exists(HistoryFilePath))
-                    Directory.CreateDirectory(HistoryFilePath);
                 var args = Environment.GetCommandLineArgs(); //获取命令行传入参数
                 if (args.Length > 1) { //通过文件打开的情况下，历史记录文件加载打开的文件
                     Title = HistoryFileName = args[1]; //将标题设为打开文件的完全路径
