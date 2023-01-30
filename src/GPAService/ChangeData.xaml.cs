@@ -11,27 +11,15 @@ namespace GradePointAverageCalulatorForSWPU {
     /// </summary>
     public partial class ChangeData : Window {
         private int Index { get; }
-        private BindingList<GradeAndPoint> GradesAndPoints { get; }
-        private GradePointAverage GradePointAverage { get; }
+        private BindingList<GradeAndPoint> GradesAndPoints { get; set; }
+        private GradePointAverage GradePointAverage { get; set; }
         private History History { get; set; }
         private bool IsAdding { get; } = false;
 
         public ChangeData(int index, History history, GradePointAverage gradePointAverage) {
-            InitializeComponent();
-
-            Change.Font = new Font(Change.Font.FontFamily, 7);
-            Change.Enabled = false;
-            Change.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            Change.FlatAppearance.BorderColor = Color.AliceBlue;
-            Change.Focus();
-
-            KeyDown += Esc_Key_Down;
-            KeyDown += Enter_Key_Down;
+            Init(history, gradePointAverage);
 
             Index = index;
-            History = history;
-            GradesAndPoints = gradePointAverage.GradesAndPoints;
-            GradePointAverage = gradePointAverage;
 
             Name.Text = GradesAndPoints[Index].Name;
             Grade.Text = GradesAndPoints[Index].Grade.ToString();
@@ -39,9 +27,18 @@ namespace GradePointAverageCalulatorForSWPU {
         }
 
         public ChangeData(History history, GradePointAverage gradePointAverage) {
+            Init(history, gradePointAverage);
+
+            Title = "添加";
+            Change.Text = "添加";
+
+            IsAdding = true;
+        }
+
+        private void Init(History history, GradePointAverage gradePointAverage) {
             InitializeComponent();
 
-            Change.Font = new Font(Change.Font.FontFamily, 7);
+            Change.Font = new Font(Change.Font.FontFamily, 9);
             Change.Enabled = false;
             Change.FlatStyle = System.Windows.Forms.FlatStyle.System;
             Change.FlatAppearance.BorderColor = Color.AliceBlue;
@@ -53,8 +50,6 @@ namespace GradePointAverageCalulatorForSWPU {
             History = history;
             GradesAndPoints = gradePointAverage.GradesAndPoints;
             GradePointAverage = gradePointAverage;
-
-            IsAdding = true;
         }
 
         private void Esc_Key_Down(object sender, KeyEventArgs e) {

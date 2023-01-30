@@ -7,11 +7,11 @@
         xmlns:wfi ="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration"
         xmlns:local="clr-namespace:GradePointAverageCalulatorForSWPU"
         mc:Ignorable="d"
-        Title="重命名" Height="150" Width="400" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
-    <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Height="80" Width="300">
-        <Label Content="名称" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="12"/>
-        <TextBox x:Name="Name" TextWrapping="NoWrap" HorizontalAlignment="Center" VerticalAlignment="Center" Width="120" FontSize="12" Height="20" TextChanged="Name_TextChanged"/>
-        <wfi:WindowsFormsHost Height="20" Width="70" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+        Title="重命名" Height="150" Width="250" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
+    <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Height="70" Width="180">
+        <Label Content="名称" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="12"/>
+        <TextBox x:Name="Name" TextWrapping="NoWrap" HorizontalAlignment="Right" VerticalAlignment="Top" Width="120" FontSize="13" Height="20"  TextChanged="Name_TextChanged" Margin="0,3,0,0"/>
+        <wfi:WindowsFormsHost Height="30" Width="100" HorizontalAlignment="Center" VerticalAlignment="Bottom">
             <wf:Button x:Name="Rename" Text="修改"  Height="20" Width="70" Click="Rename_Click" Enabled="False" />
         </wfi:WindowsFormsHost>
         

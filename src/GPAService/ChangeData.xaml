@@ -7,25 +7,25 @@
         xmlns:wfi ="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration"
         xmlns:local="clr-namespace:GradePointAverageCalulatorForSWPU"
         mc:Ignorable="d"
-        Title="修改" Height="150" Width="400" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
-    <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Height="100" Width="300">
-        <Grid HorizontalAlignment="Left" Height="50" Margin="30,4,0,0" VerticalAlignment="Top" Width="60">
-            <Label Content="学科名称" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="12" Margin="0,4,0,0"/>
-            <TextBox x:Name="Name" HorizontalAlignment="Center" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Width="50" FontSize="12" Margin="0,27,0,0"
+        Title="修改" Height="300" Width="300" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
+    <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Height="180" Width="300">
+        <Grid HorizontalAlignment="Center" Height="30" VerticalAlignment="Top" Width="200">
+            <Label Content="学科名称" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="12"/>
+            <TextBox x:Name="Name" HorizontalAlignment="Right" TextWrapping="NoWrap" Text="" VerticalAlignment="Center" Height="25" Width="130" FontSize="14"
                      TextChanged="Name_TextChanged"/>
         </Grid>
-        <Grid HorizontalAlignment="Center" Height="50" VerticalAlignment="Top" Width="60" Margin="0,4,0,0">
-            <Label Content="学分" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="12" Margin="0,4,0,0"/>
-            <TextBox x:Name="Point" HorizontalAlignment="Center" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="50" FontSize="12" Margin="0,27,0,0"
+        <Grid HorizontalAlignment="Center" Height="30" VerticalAlignment="Top" Width="200" Margin="0, 50, 0, 0">
+            <Label Content="学分" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="12"/>
+            <TextBox x:Name="Point" HorizontalAlignment="Right" TextWrapping="NoWrap" Text="" VerticalAlignment="Center" Height="25" Width="130" FontSize="14"
                      TextChanged="Point_TextChanged"/>
         </Grid>
-        <Grid HorizontalAlignment="Right" Height="50" VerticalAlignment="Top" Width="60" Margin="0,4,30,0">
-            <Label Content="成绩" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="12" Margin="0,4,0,0"/>
-            <TextBox x:Name="Grade" HorizontalAlignment="Center" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="50" FontSize="12" Margin="0,27,0,0"
+        <Grid HorizontalAlignment="Center" Height="30" VerticalAlignment="Top" Width="200" Margin="0, 100, 0, 0">
+            <Label Content="成绩" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="12"/>
+            <TextBox x:Name="Grade" HorizontalAlignment="Right" TextWrapping="NoWrap" Text="" VerticalAlignment="Center" Height="25" Width="130" FontSize="14"
                      TextChanged="Grade_TextChanged"/>
         </Grid>
-        <wfi:WindowsFormsHost HorizontalAlignment="Center" VerticalAlignment="Top" Width="70" Height="20" Margin="0,59,0,0">
-            <wf:Button x:Name="Change" Text="修改" Height="20" Width="70" Click="Change_Click" Margin="0,70,0,0"/>
+        <wfi:WindowsFormsHost HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="100" Height="30" Margin="0,59,0,0">
+            <wf:Button x:Name="Change" Text="修改" Height="30" Width="90" Click="Change_Click" Margin="0,70,0,0"/>
         </wfi:WindowsFormsHost>
 
     </Grid>

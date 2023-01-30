@@ -25,7 +25,7 @@ namespace GradePointAverageCalulatorForSWPU {
             Name.Focus();
             Name.SelectAll();
 
-            Rename.Font = new Font(Rename.Font.FontFamily, 8);
+            Rename.Font = new Font(Rename.Font.FontFamily, 9);
             Rename.FlatStyle = System.Windows.Forms.FlatStyle.System;
             Rename.FlatAppearance.BorderColor = Color.AliceBlue;
         }
