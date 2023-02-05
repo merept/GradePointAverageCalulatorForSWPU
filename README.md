@@ -12,19 +12,9 @@
 
 ### 更新
 
-- [2023.1.30 更新 v1.1.0.130](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/latest)
+- [2023.2.6 更新 v1.1.0.206](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/latest)
 
-> 新年快乐！（拜个晚年）
->
-> 1.优化了历史记录重命名窗口
->
-> 2.优化了成绩详情页修改及添加数据窗口
-
-- [2022.6.4 更新 v1.0.3](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/tag/V1.0.3)
-
-> 1.现在可以直接通过历史记录文件打开程序并查看，并且在打开的文件中所作的修改不会影响到原本的历史记录
->
-> 2.现在检查更新成功后可以查看新版本更新内容
+> 修复了一些问题
 
 - [更多历史版本更新内容](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases)
 
