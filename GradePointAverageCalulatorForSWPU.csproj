@@ -112,6 +112,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="src\GPAService\Backup.xaml.cs">
+      <DependentUpon>Backup.xaml</DependentUpon>
+    </Compile>
     <Compile Include="src\GPAService\ChangeData.xaml.cs">
       <DependentUpon>ChangeData.xaml</DependentUpon>
     </Compile>
@@ -127,6 +130,16 @@
     <Compile Include="src\Result\ResultWindowWithNames.xaml.cs">
       <DependentUpon>ResultWindowWithNames.xaml</DependentUpon>
     </Compile>
+    <Compile Include="src\Settings\About.xaml.cs">
+      <DependentUpon>About.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="src\Settings\Setting.xaml.cs">
+      <DependentUpon>Setting.xaml</DependentUpon>
+    </Compile>
+    <Page Include="src\GPAService\Backup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="src\GPAService\ChangeData.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -157,6 +170,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="src\Result\ResultWindowWithNames.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="src\Settings\About.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="src\Settings\Setting.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

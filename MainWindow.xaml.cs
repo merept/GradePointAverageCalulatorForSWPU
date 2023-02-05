@@ -19,6 +19,8 @@ using System.Xml;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Threading;
+using GradePointAverageCalulatorForSWPU.src.Settings;
+using GradePointAverageCalulatorForSWPU.src.GPAService;
 
 namespace GradePointAverageCalulatorForSWPU {
     /// <summary>
@@ -27,8 +29,8 @@ namespace GradePointAverageCalulatorForSWPU {
     public partial class MainWindow : Window {
         public static string Version { get; } = Application.ResourceAssembly.GetName().Version.ToString();
         public static string VersionConfigFile { get; } = @"\version.xml";
-        private static string updateExePath = "";
-        private static string updateDownloading = "";
+        public static string UpdateExePath { get; set; } = "";
+        public static string UpdateDownloading { get; set; } = "";
         public static bool IsAutoUpdate { get; set; }
         /// <summary>
         /// 版本配置文件
@@ -39,8 +41,8 @@ namespace GradePointAverageCalulatorForSWPU {
         public static string HistoryFileName { get; set; } = $@"{HistoryFilePath}\{Environment.UserName}.gpa";
         public readonly string helpText = "欢迎来到SWPU平均学分绩点计算器!\n" +
             "\n" +
-            "2023.2.5 更新 version 1.1.0.205\n" +
-            "修复了一些问题\n" +
+            $"版本 {Version} 更新 \n" +
+            "添加了关于窗口\n" +
             "\n" +
             "请在输入框输入您每科的学分及期末成绩，\n" +
             "可直接将教务系统成绩页的全部内容粘贴进输入框，\n" +
@@ -86,8 +88,8 @@ namespace GradePointAverageCalulatorForSWPU {
             RestoreBackup.Font = new Font(RestoreBackup.Font.FontFamily, 10);
             RestoreBackup.FlatStyle = System.Windows.Forms.FlatStyle.System;
 
-            CheckUpdate.Font = new Font(CheckUpdate.Font.FontFamily, 10);
-            CheckUpdate.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            About.Font = new Font(About.Font.FontFamily, 10);
+            About.FlatStyle = System.Windows.Forms.FlatStyle.System;
 
             UpdateProcess.Font = new Font(UpdateProcess.Font.FontFamily, 10);
             UpdateProcess.FlatStyle = System.Windows.Forms.FlatStyle.System;
@@ -101,8 +103,8 @@ namespace GradePointAverageCalulatorForSWPU {
 
             KeyDown += Esc_Key_Down;
 
-            if (File.Exists(updateExePath))
-                File.Delete(updateExePath);
+            if (File.Exists(UpdateExePath))
+                File.Delete(UpdateExePath);
         }
 
         private void BeforeWindowLoaded() {
@@ -123,7 +125,7 @@ namespace GradePointAverageCalulatorForSWPU {
                     using (var web = new WebClient()) {
                         web.DownloadFile(url, HistoryFilePath + @"\update.xml");
                     }
-                    Update(true);
+                    new About().Update(true);
                 }
             } catch (WebException) {
 
@@ -216,6 +218,7 @@ namespace GradePointAverageCalulatorForSWPU {
                 XmlNode version = root.SelectSingleNode("version");
                 version.InnerText = Version;
                 Document.Save(HistoryFilePath + VersionConfigFile);
+                Environment.Exit(0);
             } catch (Exception ex) {
                 //Log.Log(ex, "窗口关闭时出错");
                 Message.ShowError(ex.Message, ex.GetType().Name);
@@ -390,6 +393,7 @@ namespace GradePointAverageCalulatorForSWPU {
         }
 
         private void Backup_Click(object sender, EventArgs e) {
+            new Backup().Show();
             var dlg = new SaveFileDialog() {
                 FileName = Environment.UserName,
                 DefaultExt = ".gpa",
@@ -418,146 +422,9 @@ namespace GradePointAverageCalulatorForSWPU {
             }
         }
 
-        private void DownloadExe(XmlElement root, bool isAuto) {
-            XmlNode download = root.SelectSingleNode("download");
-            if (File.Exists(updateExePath)) {
-                InstallUpdate(updateExePath);
-                return;
-            }
-            using (var web = new WebClient()) {
-                if (!isAuto) {
-                    CheckUpdate.Enabled = false;
-                }
-                web.DownloadProgressChanged += Update_DownloadProgressChanged;
-                web.DownloadFileCompleted += Update_DownloadFileCompleted;
-                var s = download.InnerText;
-                web.DownloadFileAsync(new Uri(download.InnerText), updateDownloading);
-            }
+        private void About_Click(object sender, EventArgs e) {
+            new About().Show();
         }
-
-        private void Update(bool isAuto) {
-            try {
-                var updateConfigPath = HistoryFilePath + @"\update.xml";
-                var updateXml = new XmlDocument();
-                updateXml.Load(updateConfigPath);
-                XmlElement root = updateXml.DocumentElement;
-                updateDownloading = HistoryFilePath + $@"\update-{root.SelectSingleNode("version").InnerText}.downloading";
-                updateExePath = HistoryFilePath + $@"\update-{root.SelectSingleNode("version").InnerText}.exe";
-                XmlNode version = root.SelectSingleNode("version");
-                if (Version != version.InnerText) {
-                    var updateInfo = root.SelectSingleNode("updateinfo")
-                                            .InnerText
-                                            .Replace("\\n", Environment.NewLine);
-                    if (Message.ShowYesNoDialog($"检测到新版本是否更新？\n\n当前版本：v{Version}\n\n最新版本：v{version.InnerText}\n\n{updateInfo}", "应用更新") == MessageBoxResult.Yes) {
-                        DownloadExe(root, isAuto);
-                    }
-                } else {
-                    if (!isAuto) {
-                        //Message.ShowInformation("当前已为最新版本！", "应用更新");
-                        UpdateProcess.Text = $"当前已为最新版本\nv{Version}";
-                        Sleep10Sec();
-                    }
-                }
-            } catch (WebException ex) {
-                if (Regex.IsMatch(ex.Message, @"未能解析此远程名称+")) {
-                    Message.ShowWarning("网络连接错误，请检查网络配置。", "更新失败");
-                }
-            } catch (Exception ex) {
-                //Log.Log(ex, "检查更新时出错");
-                Message.ShowError(ex.Message);
-            }
-        }
-
-        private void Update_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e) {
-            try {
-                if (e.Error != null) {
-                    if (e.Error.GetType().Name == "WebException") {
-                        UpdateProcess.ForeColor = Color.Red;
-                        UpdateProcess.Text = "网络连接错误\n  请检查网络配置。";
-                        Sleep10Sec();
-                    } else {
-                        UpdateProcess.ForeColor = Color.Red;
-                        UpdateProcess.Text = "未知错误，请稍后重试。";
-                        Sleep10Sec();
-                    }
-                } else {
-                    UpdateProcess.Text = "";
-                    File.Copy(updateDownloading, updateExePath, true);
-                    File.Delete(updateDownloading);
-                    InstallUpdate(updateExePath);
-                }
-                CheckUpdate.Enabled = true;
-            } catch (Exception) {
-                InstallUpdate(updateExePath);
-                return;
-            }
-        }
-
-        private void Update_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e) {
-            try {
-                UpdateProcess.Text = $"下载更新中... {e.ProgressPercentage:0} %";
-            } catch (Exception) {
-                return;
-            }
-        }
-
-        private void InstallUpdate(string path) {
-            if (Message.ShowYesNoDialog("是否立即安装更新？", "应用更新") == MessageBoxResult.No)
-                return;
-            Process.Start(path);
-            Environment.Exit(0);
-        }
-
-        private void CheckUpdate_Click(object sender, EventArgs e) {
-            try {
-                var url = "https://gitee.com/merept/GradePointAverageCalulatorForSWPU/raw/master/update.xml";
-                using (var web = new WebClient()) {
-                    //web.DownloadProgressChanged += CheckUpdate_DownloadProgressChanged;
-                    web.DownloadFileCompleted += CheckUpdate_DownloadFileCompleted;
-                    web.DownloadFileAsync(new Uri(url), HistoryFilePath + @"\update.xml");
-                }
-            } catch (Exception ex) {
-                //Log.Log(ex, "检查更新时出错");
-                Message.ShowError(ex.Message);
-            }
-        }
-
-        private void CheckUpdate_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e) {
-            if (e.Error != null) {
-                try {
-                    if (e.Error.GetType().Name == "WebException") {
-                        UpdateProcess.ForeColor = Color.Red;
-                        UpdateProcess.Text = "网络连接错误\n  请检查网络配置。";
-                        Sleep10Sec();
-                    } else {
-                        UpdateProcess.ForeColor = Color.Red;
-                        UpdateProcess.Text = "未知错误，请稍后重试。";
-                        Sleep10Sec();
-                    }
-                } catch (Exception) {
-
-                }
-            } else {
-                //UpdateProcess.Text = "";
-                Update(false);
-            }
-        }
-
-        /// <summary>
-        /// 下载出错时，UpdateProcess 控件出现提示，十秒后自动清除
-        /// </summary>
-        private async void Sleep10Sec() {
-            await Task.Run(() => {
-                    Thread.Sleep(10000);
-                    UpdateProcess.ForeColor = Color.Black; //颜色改回黑色
-                    UpdateProcess.Text = ""; //清空文字
-                }
-            );
-        }
-
-        //private void CheckUpdate_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e) {
-        //    UpdateProcess.Text = $"检查更新中... {e.ProgressPercentage:0} %";
-        //}
 
         private void AutoCheck_CheckedChanged(object sender, EventArgs e) {
             IsAutoUpdate = AutoCheck.Checked;

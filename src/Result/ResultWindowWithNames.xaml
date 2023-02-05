@@ -7,7 +7,7 @@
         xmlns:wfi ="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration"
         xmlns:local="clr-namespace:GradePointAverageCalulatorForSWPU"
         mc:Ignorable="d"
-        Title="结果" Height="300" Width="500" WindowStartupLocation="CenterScreen" ResizeMode="CanResize">
+        Title="结果" Height="300" Width="500" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
     <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Height="250" Width="450">
         <Viewbox Stretch="Uniform">
             <Canvas Height="250" Width="450">

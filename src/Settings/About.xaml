@@ -1,0 +1,38 @@
+﻿<Window x:Class="GradePointAverageCalulatorForSWPU.src.Settings.About"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+        xmlns:wfi ="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration"
+        xmlns:local="clr-namespace:GradePointAverageCalulatorForSWPU"
+        mc:Ignorable="d"
+        Title="关于" Height="350" Width="300" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
+    <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Height="290" Width="300">
+        <Grid x:Name="Info" HorizontalAlignment="Center" VerticalAlignment="Top" Height="150" Width="250">
+            <Label HorizontalAlignment="Center" FontSize="16">SWPU学分绩点计算器</Label>
+            <Label x:Name="Ver" HorizontalAlignment="Center" FontSize="16" Margin="0, 30, 0, 0">版本 1.2.0.0</Label>
+            <Label HorizontalAlignment="Center" FontSize="16" Margin="0, 60, 0, 0">Copyright MerePT © 2023</Label>
+            <Grid HorizontalAlignment="Center" Width="110" Margin="0, 90, 0, 0">
+                <Label HorizontalAlignment="Left">
+                    <Hyperlink x:Name="WebsiteUri" Click="WebsiteUri_Click" NavigateUri="https://merept.github.io/gpac/">官网地址</Hyperlink>
+                </Label>
+                <Label HorizontalAlignment="Right">
+                    <Hyperlink x:Name="GithubUri" Click="GithubUri_Click" NavigateUri="https://github.com/merept/GradePointAverageCalulatorForSWPU">项目地址</Hyperlink>
+                </Label>
+            </Grid>
+        </Grid>
+
+        <Grid x:Name="Updating" HorizontalAlignment="Center" VerticalAlignment="Center" Height="100" Width="250" Margin="0,50,0,0">
+            <wfi:WindowsFormsHost HorizontalAlignment="Center" Height="30" Width="80" VerticalAlignment="Top" >
+                <wf:Button x:Name="CheckUpdate" Text="检查更新" Click="CheckUpdate_Click"/>
+            </wfi:WindowsFormsHost>
+            <!--<wfi:WindowsFormsHost HorizontalAlignment="Center" VerticalAlignment="Bottom" Height="15" Width="250" Margin="0,0,0,0">
+                <wf:ProgressBar Minimum="1" Maximum=" Value="10"  x:Name="UpdateProcess"></wf:ProgressBar>
+            </wfi:WindowsFormsHost>-->
+        </Grid>
+        <wfi:WindowsFormsHost HorizontalAlignment="Center" VerticalAlignment="Bottom" Height="40" Width="149" Margin="0,0,0,0">
+            <wf:Label x:Name="UpdateProcess" TextAlign="BottomCenter" AutoSize="False" Size="16,16" Text="%更新进度%" Margin="0,0,0,0"></wf:Label>
+        </wfi:WindowsFormsHost>
+    </Grid>
+</Window>

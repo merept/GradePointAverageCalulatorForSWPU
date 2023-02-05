@@ -28,10 +28,10 @@
                 <wf:Button x:Name="RestoreBackup" Text="恢复备份" Height="40" Width="150" Click="RestoreBackup_Click"/>
             </wfi:WindowsFormsHost>
             <wfi:WindowsFormsHost HorizontalAlignment="Center" Height="40" VerticalAlignment="Top" Width="149" Margin="0,200,0,0">
-                <wf:Button x:Name="CheckUpdate" Text="检查更新" Height="40" Width="150" Click="CheckUpdate_Click"/>
+                <wf:Button x:Name="About" Text="关于" Height="40" Width="150" Click="About_Click"/>
             </wfi:WindowsFormsHost>
             <wfi:WindowsFormsHost HorizontalAlignment="Center" Height="40" VerticalAlignment="Top" Width="149" Margin="0,250,0,0">
-                <wf:Label x:Name="UpdateProcess" Text="%更新进度%" Height="40" Width="150" Click="CheckUpdate_Click"/>
+                <wf:Label x:Name="UpdateProcess" Text="%更新进度%" Height="40" Width="150"/>
             </wfi:WindowsFormsHost>
             <wfi:WindowsFormsHost HorizontalAlignment="Center" Height="40" VerticalAlignment="Bottom" Width="149" Margin="100,0,0,40">
                 <wf:CheckBox x:Name="AutoCheck" Text="自动检查更新" Height="40" Width="150" AutoSize="True" CheckedChanged="AutoCheck_CheckedChanged"/>
