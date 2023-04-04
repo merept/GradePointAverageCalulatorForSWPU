@@ -12,9 +12,9 @@
 
 ### 更新
 
-- [2023.2.5 更新 v1.1.2.205](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/latest)
+- [2023.2.5 更新 v1.1.2.403](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases/latest)
 
-> 修复了一些问题
+> 修复了备份历史纪录时弹出额外窗口的问题
 
 - [更多历史版本更新内容](https://github.com/merept/GradePointAverageCalulatorForSWPU/releases)
 

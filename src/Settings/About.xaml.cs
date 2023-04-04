@@ -17,8 +17,7 @@ namespace GradePointAverageCalulatorForSWPU.src.Settings
     /// <summary>
     /// About.xaml 的交互逻辑
     /// </summary>
-    public partial class About : Window
-    {
+    public partial class About : Window {
         public About() {
             System.Windows.Forms.Application.EnableVisualStyles();
             InitializeComponent();

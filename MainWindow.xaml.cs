@@ -1,26 +1,22 @@
-﻿using MessageUtil;
+﻿using GradePointAverageCalulatorForSWPU.src.Settings;
+using MessageUtil;
+//using MerelyLogTool;
+using Microsoft.Win32;
 using System;
 using System.ComponentModel;
+using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
-using MessageBox = System.Windows.Forms.MessageBox;
-using MessageBoxImage = System.Windows.Forms.MessageBoxIcon;
-using MessageBoxButton = System.Windows.Forms.MessageBoxButtons;
-using MessageBoxResult = System.Windows.Forms.DialogResult;
-using System.Drawing;
-//using MerelyLogTool;
-using Microsoft.Win32;
-using System.Net;
 using System.Xml;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using System.Threading;
-using GradePointAverageCalulatorForSWPU.src.Settings;
-using GradePointAverageCalulatorForSWPU.src.GPAService;
+using MessageBox = System.Windows.Forms.MessageBox;
+using MessageBoxButton = System.Windows.Forms.MessageBoxButtons;
+using MessageBoxImage = System.Windows.Forms.MessageBoxIcon;
+using MessageBoxResult = System.Windows.Forms.DialogResult;
 
 namespace GradePointAverageCalulatorForSWPU {
     /// <summary>
@@ -42,7 +38,7 @@ namespace GradePointAverageCalulatorForSWPU {
         public readonly string helpText = "欢迎来到SWPU平均学分绩点计算器!\n" +
             "\n" +
             $"版本 {Version} 更新 \n" +
-            "添加了关于窗口\n" +
+            "修复了备份历史纪录时弹出额外窗口的问题\n" +
             "\n" +
             "请在输入框输入您每科的学分及期末成绩，\n" +
             "可直接将教务系统成绩页的全部内容粘贴进输入框，\n" +
@@ -393,7 +389,7 @@ namespace GradePointAverageCalulatorForSWPU {
         }
 
         private void Backup_Click(object sender, EventArgs e) {
-            new Backup().Show();
+            //new Backup().Show();
             var dlg = new SaveFileDialog() {
                 FileName = Environment.UserName,
                 DefaultExt = ".gpa",

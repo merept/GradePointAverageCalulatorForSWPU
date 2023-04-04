@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <config>
-  <version>1.1.2.205</version>
-  <download>https://gitee.com/merept/GradePointAverageCalulatorForSWPU/releases/download/v1.1.2/GPAC_Setup_1.1.2.205.exe</download>
-  <updateinfo>添加了关于窗口</updateinfo>
+  <version>1.1.2.403</version>
+  <download>https://gitee.com/merept/GradePointAverageCalulatorForSWPU/releases/download/v1.1.2/GPAC_Setup_1.1.2.403.exe</download>
+  <updateinfo>修复了备份历史纪录时弹出额外窗口的问题</updateinfo>
 </config>
