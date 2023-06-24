@@ -38,7 +38,9 @@ namespace GradePointAverageCalulatorForSWPU {
         public readonly string helpText = "欢迎来到SWPU平均学分绩点计算器!\n" +
             "\n" +
             $"版本 {Version} 更新 \n" +
-            "修复了备份历史纪录时弹出额外窗口的问题\n" +
+            "1.修复了在全部成绩页面计算时会出现报错的问题\n" +
+            "2.修复了点击计算后若出现报错，仍将保存历史记录，且错\n" +
+            "误的历史记录无法删除的问题\n" +
             "\n" +
             "请在输入框输入您每科的学分及期末成绩，\n" +
             "可直接将教务系统成绩页的全部内容粘贴进输入框，\n" +
@@ -312,24 +314,26 @@ namespace GradePointAverageCalulatorForSWPU {
                 for (int i = 0; i < datas.Length - 1; i += count) {
                     if (IsNotCount(datas[i], datas[i + nameIndex])) 
                         continue;
-                    if (IsDeferredExam(datas[i + count], datas[i + gradeIndex])) {
-                        i++;
-                        continue;
+                    if (count != 7) {
+                        if (IsDeferredExam(datas[i + count], datas[i + gradeIndex])) {
+                            i++;
+                            continue;
+                        }
                     }
                     if (!Regex.IsMatch(datas[i], @"\d{10}"))
                         i++;
                     gpa.Add(datas[i + nameIndex], Convert.ToDouble(datas[i + pointIndex]), Convert.ToDouble(datas[i + gradeIndex]));
                 }
+                var history = new History(gpa);
+                if (!Histories.Contains(history))
+                    Histories.Add(history);
+                if (MessageBoxShow(gpa)) {
+                    new ResultWindowWithNames(Histories.Last().GradePointAverage, Histories, Histories.IndexOf(Histories.Last())).Show();
+                } else return;
             } catch (Exception ex) {
                 //Log.Log(ex, "计算结果时出错");
                 Message.ShowError(ex.Message, ex.GetType().Name);
             }
-            var history = new History(gpa);
-            if (!Histories.Contains(history))
-                Histories.Add(history);
-            if (MessageBoxShow(gpa)) {
-                new ResultWindowWithNames(Histories.Last().GradePointAverage, Histories, Histories.IndexOf(Histories.Last())).Show();
-            } else return;
         }
 
         /// <summary>
@@ -362,7 +366,7 @@ namespace GradePointAverageCalulatorForSWPU {
                     var listT = strs.ToList(); //Edge下每一行去掉\r\n后剩下的两个数据间隔是/u0020，会导致分割错误，转为List以便重组数组
                     count = 0;
                     for (int i = 0; i < listT.Count; i++) { //重组数组
-                        if (Regex.IsMatch(listT[i], @"\d{2}.\d\u0020\d{10}")) { 
+                        if (Regex.IsMatch(listT[i], @"\d+.\d\u0020\d{10}")) { 
                             var str = Regex.Split(listT[i], @"\u0020");
                             listT[i] = str[0];
                             listT.Insert(i + 1, str[1]);
